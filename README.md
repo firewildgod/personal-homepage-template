@@ -10,6 +10,8 @@
 
 ## 获取模板
 
+在线体验：[个人主页模板网站](https://firewildgod.github.io/personal-homepage-template/)，无需登录即可查看完整页面与示例附件。
+
 仓库：[firewildgod/personal-homepage-template](https://github.com/firewildgod/personal-homepage-template)。
 
 可以点击 GitHub 的 **Use this template** 建立自己的仓库，也可以从 [Releases](https://github.com/firewildgod/personal-homepage-template/releases) 下载完整分享包，或点击 **Code → Download ZIP** 下载源码。Git 用户可运行：
@@ -76,6 +78,8 @@ package.json                可选构建命令，无第三方依赖
 ```
 
 打开模板无需安装依赖，也无需联网。若托管平台需要构建目录，在安装 Node.js 的环境运行 `node build.mjs`，将生成的 `dist` 目录作为静态站点根目录。
+
+本仓库通过 GitHub Pages 发布，来源为 `main` 分支的根目录。使用 **Use this template** 建立自己的仓库后，可在 **Settings → Pages → Deploy from a branch** 中选择自己的默认分支和 **/ (root)**，发布自己的个人主页；`.nojekyll` 会让 GitHub 直接发布静态文件。向发布分支推送修改后，网站会自动更新。
 
 分享这个演示模板时，请保留「虚构示例」标注，让使用者能够区分样稿与真实成果。制作自己的个人主页时，先逐页替换人物、作者、时间、指标和附件，再按需要删除已替换内容旁的示例标签与填写提示。请只分享本模板文件夹或其 ZIP；原项目的私人材料与历史备份不属于开源内容。
 
