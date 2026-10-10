@@ -1,0 +1,12 @@
+{
+  "name": "personal-homepage-template",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firewildgod/personal-homepage-template.git"
+  },
+  "scripts": { "build": "node build.mjs" }
+}

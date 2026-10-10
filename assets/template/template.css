@@ -1,0 +1,37 @@
+/* Reusable template controls; all content examples are fictional. */
+body { font-family: 'Noto Serif SC', 'SimSun', serif; }
+.template-notice { padding: 14px 18px; border: 1px solid rgba(139,58,42,.18); background: #eee6d9; color: #6c362b; font: 13px/1.8 'Microsoft YaHei', sans-serif; margin-bottom: 28px; }
+.welcome-banner .template-notice { display: inline-block; color: #f7f3ee; background: rgba(26,20,16,.65); border-color: rgba(247,243,238,.25); margin-bottom: 20px; padding: 6px 12px; font-size: 11px; letter-spacing: .08em; }
+.writing-tip { padding: 20px 24px; margin: 28px 0; border-left: 3px solid var(--accent); background: rgba(139,58,42,.05); font: 14px/1.9 'Microsoft YaHei', sans-serif; color: var(--ink-light); }
+.writing-tip p:last-child { margin-bottom: 0; }
+.writing-tip strong { color: var(--accent); }
+.guide-card { margin: 20px 0; padding: 25px; background: rgba(255,255,255,.5); border: 1px solid #ded5ca; font: 14px/1.9 'Microsoft YaHei',sans-serif; }
+.guide-card h2, .guide-card h3 { margin-bottom: 12px; color: var(--ink); font-weight: 600; }
+.guide-card p + p { margin-top: 12px; }
+.guide-card ol, .guide-card ul { padding-left: 22px; }
+.guide-card li { margin: 6px 0; }
+.guide-card code { font-size: 12px; overflow-wrap: anywhere; }
+.prose, .project-desc, .paper-abstract, .welcome-banner-body, .frag-preview { overflow-wrap: anywhere; }
+[data-edit] { white-space: pre-line; }
+[contenteditable='true'] { outline: 1px dashed #c4714f !important; cursor: text; }
+body.edit-active [data-edit]:focus { outline: 2px solid var(--accent) !important; }
+#edit-toolbar { flex-wrap: wrap; padding: 12px 18px; gap: 8px; }
+#edit-toolbar .ebtn { padding: 8px 12px; }
+.template-settings { display: none; position: fixed; inset: 0; z-index: 10010; background: rgba(26,20,16,.65); padding: 24px; align-items: center; justify-content: center; }
+.template-settings.active { display: flex; }
+.template-settings-panel { width: min(620px,100%); max-height: 88dvh; overflow-y: auto; padding: 28px; background: var(--paper); box-shadow: 0 20px 60px #1a141044; font: 14px/1.8 'Microsoft YaHei',sans-serif; }
+.template-settings-panel h2 { font-size: 22px; margin-bottom: 10px; }
+.template-settings-panel p { color: var(--ink-light); margin-bottom: 18px; }
+.template-settings-panel label { display: block; margin-top: 14px; }
+.template-settings-panel input { display: block; width: 100%; padding: 10px 12px; margin-top: 5px; border: 1px solid #cfc5b9; background: #fff; font: inherit; }
+.template-settings-panel .settings-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+.template-settings-panel button { padding: 9px 18px; background: var(--ink); color: var(--paper); border: 0; cursor: pointer; font: inherit; }
+.template-settings-panel button.secondary { background: #e5dcd0; color: var(--ink); }
+.template-settings-panel .settings-status { color: var(--accent); margin: 10px 0 0; min-height: 1em; }
+#edit-toast { z-index: 11000; max-width: calc(100vw - 32px); }
+#main .reveal, #main .reveal-left, #main .reveal-scale, #main .reveal-blur, #main .reveal-stagger > * { opacity: 1; transform: none; filter: none; }
+button:focus-visible, a:focus-visible, [role='button']:focus-visible { outline: 2px solid var(--accent-light); outline-offset: 4px; }
+#cert-box-body { padding: 8px; }
+.resume-fallback { font: 13px/1.8 'Microsoft YaHei',sans-serif; margin-bottom: 16px; }
+@media (max-width: 768px) { .guide-card { padding: 20px; } .template-settings { padding: 16px; } .template-settings-panel { padding: 22px; } body.edit-active #main { padding-bottom: 160px; } #edit-toolbar .ebtn-reset { margin-left: 0; } .template-notice { font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }

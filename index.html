@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>林川 · 个人主页模板</title>
+<style>
+  :root {
+    --ink: #1a1410;
+    --ink-light: #4a3f35;
+    --ink-faint: #8a7a6e;
+    --paper: #f7f3ee;
+    --paper-warm: #ede7dc;
+    --accent: #8b3a2a;
+    --accent-light: #c4714f;
+    --gold: #b8962e;
+    --sidebar-w: 260px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Chapter theme backgrounds */
+    --bg-c: #f2e8d8;   /* 童年·暖琥珀 */
+    --bg-p: #ece9de;   /* 小学·暖米 */
+    --bg-m: #e8ecf0;   /* 初中·冷蓝灰 */
+    --bg-h: #ede8f2;   /* 高中·暮紫 */
+    --bg-u: #e7f0eb;   /* 大学·清绿 */
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  img { max-width: 100%; height: auto; display: block; }
+
+  body {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+  }
+
+  .sidebar-header {
+    padding: 36px 24px 28px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    cursor: pointer;
+    transition: opacity var(--transition);
+  }
+  .sidebar-header:hover { opacity: 0.75; }
+
+  .sidebar-header .name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--paper);
+    line-height: 1.2;
+  }
+
+  .sidebar-header .subtitle {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-faint);
+    margin-top: 6px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .sidebar-nav { padding: 16px 0; flex: 1; }
+
+  .nav-section { margin-bottom: 4px; }
+
+  .nav-section-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: rgba(247,243,238,0.85);
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 13.5px;
+    font-weight: 400;
+    padding: 11px 24px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: var(--transition);
+    letter-spacing: 0.04em;
+  }
+
+  .nav-section-btn:hover { color: var(--paper); background: rgba(255,255,255,0.06); }
+  .nav-section-btn.active { color: var(--gold); }
+
+  .nav-section-btn .arrow {
+    font-size: 9px;
+    transition: transform var(--transition);
+    opacity: 0.5;
+  }
+  .nav-section-btn.open .arrow { transform: rotate(90deg); }
+
+  .nav-subsections {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .nav-subsections.open { max-height: 600px; }
+
+  .nav-sub-btn {
+    width: 100%;
+    background: none;
+    border: none;
+    color: rgba(247,243,238,0.55);
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    padding: 8px 24px 8px 38px;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    letter-spacing: 0.03em;
+    position: relative;
+  }
+
+  .nav-sub-btn::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: currentColor;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .nav-sub-btn:hover { color: rgba(247,243,238,0.85); }
+  .nav-sub-btn.active {
+    color: var(--accent-light);
+  }
+  .nav-sub-btn.active::before { background: var(--accent-light); opacity: 1; }
+
+  .sidebar-footer {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    color: rgba(247,243,238,0.2);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  .page {
+    display: none;
+    min-height: 100vh;
+    padding: 60px 72px;
+    max-width: 920px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .page.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Chapter pages */
+  .chapter-page { display: none; min-height: 100vh; }
+  .chapter-page.active { display: block; }
+
+  /* ── PAGE TYPOGRAPHY ── */
+  .page-eyebrow {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .page-title-cn {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .page-subtitle {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    color: var(--ink-faint);
+    margin-bottom: 40px;
+    font-weight: 300;
+  }
+
+  .divider {
+    width: 48px;
+    height: 2px;
+    background: var(--accent);
+    margin-bottom: 40px;
+  }
+
+  .prose {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 15.5px;
+    line-height: 2;
+    color: var(--ink-light);
+    font-weight: 300;
+  }
+
+  .prose p { margin-bottom: 1.6em; }
+
+  .prose .highlight {
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  /* ── AUTOBIOGRAPHY INDEX ── */
+  .auto-index { padding: 60px 72px; }
+  .auto-index .page-title-cn { font-size: 42px; margin-bottom: 8px; }
+
+  .chapter-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 40px;
+  }
+
+  .chapter-card {
+    background: var(--paper-warm);
+    border: 1px solid rgba(139,58,42,0.1);
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chapter-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+  }
+
+  .chapter-card:hover { border-color: rgba(139,58,42,0.3); transform: translateY(-2px); }
+  .chapter-card:hover::before { transform: scaleX(1); }
+
+  .chapter-card .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: rgba(139,58,42,0.15);
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+
+  .chapter-card .label {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .chapter-card .years {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  /* ── CHAPTER: sub-section index ── */
+  .section-index { padding: 60px 72px; }
+
+  .back-btn {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 32px;
+    transition: color var(--transition);
+    letter-spacing: 0.05em;
+    padding: 0;
+  }
+  .back-btn:hover { color: var(--accent); }
+  /* When back btn follows hero strip, reduce its margin-bottom slightly */
+  .page-hero-strip + .back-btn { margin-top: 0; }
+
+  .fragment-list { margin-top: 32px; display: grid; grid-template-columns: 1fr; gap: 12px; }
+
+  .fragment-item {
+    display: grid;
+    grid-template-columns: 44px 1fr 20px;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 24px;
+    background: var(--paper-warm);
+    border: 1px solid rgba(139,58,42,0.07);
+    border-left: 3px solid transparent;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .fragment-item:hover {
+    border-left-color: var(--accent);
+    background: #ede6db;
+    box-shadow: 2px 4px 20px rgba(0,0,0,0.07);
+    border-color: rgba(139,58,42,0.18);
+  }
+
+  .fragment-item::after {
+    content: '→';
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    color: var(--accent-light);
+    opacity: 0;
+    transition: opacity var(--transition);
+    justify-self: end;
+  }
+  .fragment-item:hover::after { opacity: 1; }
+
+  .fragment-item .frag-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    color: rgba(139,58,42,0.18);
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+  }
+
+  .fragment-item .frag-info { flex: 1; min-width: 0; }
+  .fragment-item .frag-title {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 5px;
+    line-height: 1.5;
+  }
+  .fragment-item .frag-preview {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    line-height: 1.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 2-column on wide viewports */
+  @media (min-width: 1200px) {
+    .fragment-list { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .fragment-item .frag-preview { white-space: normal; }
+  }
+
+  /* ── FRAGMENT CONTENT PAGE ── */
+  .fragment-content { padding: 60px 72px; max-width: 820px; }
+
+  .breadcrumb {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-bottom: 36px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .breadcrumb span { cursor: pointer; transition: color var(--transition); }
+  .breadcrumb span:hover { color: var(--accent); }
+  .breadcrumb .sep { opacity: 0.4; }
+
+  .fragment-header {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid rgba(26,20,16,0.08);
+  }
+
+  /* ── PLACEHOLDER PAGES ── */
+  .coming-soon {
+    padding: 60px 72px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 60vh;
+  }
+
+  .coming-soon .icon {
+    font-size: 48px;
+    margin-bottom: 24px;
+    opacity: 0.3;
+  }
+
+  .coming-soon p {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-top: 12px;
+  }
+
+  /* ── PREV / NEXT NAV ── */
+  .nav-next {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(26,20,16,0.06);
+  }
+
+  .next-btn, .prev-btn {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    background: none;
+    border: 1px solid rgba(139,58,42,0.2);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 20px;
+    border-radius: 2px;
+    transition: var(--transition);
+  }
+
+  .next-btn { text-align: left; }
+  .prev-btn { text-align: right; }
+
+  .next-btn:hover, .prev-btn:hover {
+    border-color: var(--accent);
+    background: rgba(139,58,42,0.04);
+  }
+
+  .next-btn:hover .next-title,
+  .prev-btn:hover .prev-title { color: var(--accent); }
+
+  .next-btn .next-label, .prev-btn .prev-label {
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .next-btn .next-title, .prev-btn .prev-title {
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: color var(--transition);
+  }
+
+  .next-btn .next-arrow, .prev-btn .prev-arrow {
+    font-size: 16px;
+    color: var(--accent-light);
+    flex-shrink: 0;
+  }
+
+  /* ── CERT MODAL ── */
+  #cert-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    align-items: center;
+    justify-content: center;
+  }
+  #cert-modal.active { display: flex; }
+  #cert-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(26,20,16,0.72);
+    backdrop-filter: blur(4px);
+  }
+  #cert-box {
+    position: relative;
+    z-index: 1;
+    background: var(--paper);
+    width: 88vw;
+    max-width: 1000px;
+    height: 88vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.45);
+  }
+  #cert-box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(26,20,16,0.08);
+    flex-shrink: 0;
+  }
+  #cert-box-title {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    color: var(--ink-light);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+  #cert-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--ink-faint);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+    transition: color var(--transition);
+  }
+  #cert-close:hover { color: var(--accent); }
+  #cert-box-body {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #f0ece5;
+  }
+  #cert-box-body iframe { width: 100%; height: 100%; border: none; }
+  #cert-box-body img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  #cert-box-body video { max-width: 100%; max-height: 100%; }
+
+  /* ── CERT / AWARD CARDS ── */
+  .cert-section { margin-bottom: 44px; }
+  .cert-section-label {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(195px, 1fr));
+    gap: 13px;
+  }
+  .cert-card {
+    background: var(--paper-warm);
+    border: 1px solid rgba(139,58,42,0.1);
+    padding: 20px 18px 36px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .cert-card::after {
+    content: '查看';
+    position: absolute;
+    bottom: 12px; right: 14px;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    color: rgba(139,58,42,0.35);
+    letter-spacing: 0.06em;
+    transition: color var(--transition);
+  }
+  .cert-card:hover { border-color: rgba(139,58,42,0.3); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.07); }
+  .cert-card:hover::after { color: var(--accent); }
+  .cert-badge {
+    display: inline-block;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .badge-national { background: rgba(139,58,42,0.1); color: var(--accent); }
+  .badge-provincial { background: rgba(184,150,46,0.1); color: var(--gold); }
+  .badge-other { background: rgba(74,63,53,0.07); color: var(--ink-faint); }
+  .cert-name {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 5px;
+  }
+  .cert-sub {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  /* ── PROJECT CARDS ── */
+  .project-card {
+    background: var(--paper-warm);
+    border: 1px solid rgba(139,58,42,0.1);
+    padding: 24px 26px;
+    margin-bottom: 14px;
+    transition: var(--transition);
+  }
+  .project-card:hover { border-color: rgba(139,58,42,0.25); }
+  .project-title {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  .project-meta {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-bottom: 14px;
+    line-height: 1.7;
+  }
+  .project-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .proj-btn {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    padding: 6px 16px;
+    border: 1px solid rgba(139,58,42,0.22);
+    background: none;
+    cursor: pointer;
+    color: var(--ink-light);
+    border-radius: 2px;
+    transition: var(--transition);
+    letter-spacing: 0.04em;
+  }
+  .proj-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(139,58,42,0.04); }
+
+  /* scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(26,20,16,0.15); border-radius: 3px; }
+
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 220px; }
+    .page, .auto-index, .section-index, .fragment-content, .coming-soon { padding: 40px 28px; }
+    .page-title { font-size: 32px; }
+    .welcome-news { padding: 40px 28px 32px; }
+    .welcome-contact-row { gap: 14px; margin-top: 18px; }
+  }
+
+  /* ── EDIT MODE ── */
+  [contenteditable="true"] {
+    outline: 1px dashed rgba(139,58,42,0.4) !important;
+    border-radius: 2px;
+    min-height: 1em;
+    cursor: text;
+  }
+  [contenteditable="true"]:focus {
+    outline: 2px solid var(--accent) !important;
+    background: rgba(139,58,42,0.04);
+  }
+  #edit-toolbar {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 11px 28px;
+    z-index: 9998;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    border-top: 2px solid var(--accent);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+  }
+  body.edit-active #edit-toolbar { display: flex; }
+  body.edit-active #main { padding-bottom: 56px; }
+  .ebtn {
+    border: none;
+    padding: 6px 18px;
+    cursor: pointer;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    transition: opacity 0.15s;
+  }
+  .ebtn:hover { opacity: 0.75; }
+  .ebtn-save   { background: var(--accent); color: #fff; }
+  .ebtn-export { background: var(--gold);   color: #fff; }
+  .ebtn-exit   { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: var(--paper); }
+  .ebtn-reset  { background: transparent; border: none; color: var(--ink-faint); margin-left: auto; font-size: 11px; }
+  #edit-toast {
+    display: none;
+    position: fixed;
+    top: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 9px 24px;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    z-index: 99999;
+    pointer-events: none;
+    animation: fadeIn 0.2s ease;
+  }
+  .admin-trigger {
+    display: block;
+    margin-top: 14px;
+    width: 100%;
+    background: none;
+    border: 1px solid rgba(255,255,255,0.08);
+    color: rgba(247,243,238,0.2);
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .admin-trigger:hover { color: rgba(247,243,238,0.5); border-color: rgba(255,255,255,0.2); }
+
+  /* ── PAPER GRAIN ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.018;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 300px 300px;
+  }
+
+  /* ── SIDEBAR ACTIVE INDICATOR ── */
+  .nav-section-btn { position: relative; }
+  .nav-section-btn.active::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 2px; height: 55%;
+    background: var(--accent-light);
+    border-radius: 1px;
+  }
+
+  /* ── WELCOME PAGE ── */
+  .welcome-eyebrow {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-bottom: 52px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .welcome-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .welcome-hero {
+    padding-left: 22px;
+    border-left: 2px solid var(--accent);
+    margin-bottom: 52px;
+  }
+  .welcome-headline {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.5;
+    letter-spacing: 0.01em;
+    max-width: 560px;
+    margin-bottom: 32px;
+  }
+  .welcome-body {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 15px;
+    color: var(--ink-light);
+    font-weight: 300;
+    line-height: 2.1;
+    max-width: 520px;
+    margin-bottom: 20px;
+  }
+  .welcome-sig {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 16px;
+    color: var(--accent);
+    letter-spacing: 0.03em;
+  }
+
+  .welcome-photos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    max-width: 600px;
+    margin-bottom: 52px;
+  }
+  .welcome-photos .photo-frame {
+    overflow: hidden;
+    position: relative;
+  }
+  .welcome-photos .photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(139,58,42,0.15);
+    pointer-events: none;
+    z-index: 1;
+  }
+  .welcome-photos .photo-frame img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    filter: sepia(0.08) contrast(0.96);
+    transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), filter 0.6s ease;
+  }
+  .welcome-photos .photo-frame:hover img {
+    transform: scale(1.05);
+    filter: sepia(0.03) contrast(0.99);
+  }
+
+  .welcome-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin-bottom: 52px;
+    border: 1px solid rgba(139,58,42,0.1);
+  }
+  .welcome-stat {
+    padding: 26px 28px;
+    border-right: 1px solid rgba(139,58,42,0.08);
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-stat:last-child { border-right: none; }
+  .welcome-stat::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s ease;
+  }
+  .welcome-stat:hover::after { transform: scaleX(1); }
+  .welcome-stat .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin-bottom: 7px;
+  }
+  .welcome-stat .stat-desc {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .welcome-label {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+  }
+  .welcome-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(185px, 1fr));
+    gap: 10px;
+  }
+  .welcome-nav-card {
+    border: 1px solid rgba(139,58,42,0.15);
+    padding: 18px 20px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-nav-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+  }
+  .welcome-nav-card:hover { background: var(--paper-warm); border-color: rgba(139,58,42,0.3); }
+  .welcome-nav-card:hover::after { transform: scaleX(1); }
+  .welcome-nav-card .card-title {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .welcome-nav-card .card-sub {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 300;
+  }
+
+  /* ── WELCOME HERO BANNER ── */
+  #page-welcome { padding: 0; max-width: none; }
+  .welcome-body-section { padding: 52px 72px; max-width: 860px; }
+
+  .welcome-banner {
+    position: relative;
+    width: 100%;
+    min-height: 72vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+  .welcome-banner-bg {
+    position: absolute;
+    top: -15%; left: 0; right: 0;
+    height: 130%;
+    background-image: url('assets/template/scenery.svg');
+    background-size: cover;
+    background-position: center;
+    will-change: transform;
+  }
+  .welcome-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      rgba(20,14,10,0.8) 0%,
+      rgba(20,14,10,0.58) 52%,
+      rgba(20,14,10,0.18) 100%
+    );
+  }
+  .welcome-banner-content {
+    position: relative;
+    z-index: 1;
+    padding: 80px;
+    max-width: 720px;
+  }
+  .welcome-banner-eyebrow {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: rgba(247,243,238,0.52);
+    font-weight: 300;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .welcome-banner-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--accent-light);
+    flex-shrink: 0;
+  }
+  .welcome-banner-headline {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 46px;
+    font-weight: 600;
+    color: #f5f0ea;
+    line-height: 1.52;
+    letter-spacing: 0.02em;
+    margin-bottom: 28px;
+    text-shadow: 0 2px 28px rgba(0,0,0,0.4);
+  }
+  .welcome-banner-body {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 15px;
+    color: rgba(245,240,234,0.72);
+    font-weight: 300;
+    line-height: 2.05;
+    max-width: 480px;
+    margin-bottom: 26px;
+  }
+  .welcome-banner-sig {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: var(--accent-light);
+    letter-spacing: 0.03em;
+  }
+  .welcome-banner-scroll {
+    position: absolute;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    color: rgba(247,243,238,0.75);
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    pointer-events: none;
+    animation: scrollBounce 2.4s ease-in-out infinite;
+  }
+  .welcome-banner-scroll::after { content: '↓'; font-size: 18px; }
+  @keyframes scrollBounce {
+    0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
+    50% { opacity: 1; transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* Campus image strip (full-width divider) */
+  .welcome-img-strip {
+    width: 100%;
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+  }
+  .welcome-img-strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 42%;
+    filter: sepia(0.1) contrast(0.95) brightness(0.85);
+    display: block;
+    will-change: transform;
+  }
+  .welcome-img-strip-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(247,243,238,0.12) 0%,
+      transparent 22%,
+      transparent 78%,
+      rgba(247,243,238,0.12) 100%
+    );
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.72s ease, transform 0.72s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── PAGE HEADER STRIP (each section) ── */
+  .page-hero-strip {
+    width: calc(100% + 144px);
+    margin: -60px -72px 48px;
+    height: 220px;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-hero-strip img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center 40%;
+    display: block;
+    filter: brightness(0.72) sepia(0.12);
+    transform: scale(1.04);
+    transition: transform 8s ease;
+  }
+  .page-hero-strip:hover img { transform: scale(1); }
+  .page-hero-strip-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(26,20,16,0.05) 0%,
+      transparent 40%,
+      transparent 60%,
+      rgba(247,243,238,0.55) 100%
+    );
+  }
+  .page-hero-strip-label {
+    position: absolute;
+    bottom: 18px; left: 28px;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(26,20,16,0.45);
+    font-weight: 300;
+  }
+
+  /* ══════════════════════════════════════════════
+     CHAPTER BACKGROUND THEMES
+     #main 背景随章节切换，打破全局米白单色
+  ══════════════════════════════════════════════ */
+  #main { transition: background 0.6s ease; }
+
+  /* 各章节独立配色 — 作用于整个 #main 区域 */
+  #main.theme-c { background: var(--bg-c); }
+  #main.theme-p { background: var(--bg-p); }
+  #main.theme-m { background: var(--bg-m); }
+  #main.theme-h { background: var(--bg-h); }
+  #main.theme-u { background: var(--bg-u); }
+
+  /* ── INLINE ILLUSTRATION (fragment 正文配图) ── */
+  .frag-illustration {
+    margin: 44px 0 40px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+  }
+  .frag-illustration img {
+    width: 100%;
+    aspect-ratio: 16 / 7;
+    object-fit: cover;
+    display: block;
+    filter: brightness(0.88) sepia(0.12) contrast(0.96);
+    transition: transform 8s ease, filter 0.5s ease;
+  }
+  .frag-illustration:hover img {
+    transform: scale(1.025);
+    filter: brightness(0.92) sepia(0.08) contrast(0.98);
+  }
+  .frag-illustration-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 32px 22px 14px;
+    background: linear-gradient(to top, rgba(26,20,16,0.55) 0%, transparent 100%);
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 11.5px;
+    font-weight: 300;
+    color: rgba(247,243,238,0.82);
+    letter-spacing: 0.06em;
+    font-style: italic;
+  }
+  /* 左侧章节色彩竖条 — fragment 页面专属装饰 */
+  .frag-chapter-stripe {
+    position: fixed;
+    left: var(--sidebar-w);
+    top: 0; bottom: 0;
+    width: 3px;
+    z-index: 50;
+    pointer-events: none;
+    transition: background 0.6s ease;
+  }
+  /* 色条颜色随章节切换 — 通过 JS 直接设置 style */
+  .frag-chapter-stripe { background: transparent; }
+
+  @media (max-width: 768px) {
+    .frag-chapter-stripe { display: none; }
+    .frag-illustration img { aspect-ratio: 16 / 9; }
+  }
+
+  /* ── FRAGMENT HERO STRIP (smaller, more intimate than chapter index) ── */
+  .fragment-hero-strip {
+    height: 168px;
+    margin-bottom: 36px;
+  }
+  .fragment-hero-strip img {
+    filter: brightness(0.65) sepia(0.18);
+    transition: transform 12s ease;
+  }
+  .fragment-hero-strip .page-hero-strip-overlay {
+    background: linear-gradient(to bottom,
+      rgba(26,20,16,0.08) 0%,
+      transparent 35%,
+      transparent 55%,
+      rgba(247,243,238,0.72) 100%
+    );
+  }
+  @media (max-width: 768px) {
+    .fragment-hero-strip { height: 130px; }
+  }
+  @media (max-width: 480px) {
+    .fragment-hero-strip { height: 110px; }
+  }
+
+  /* ── BUTTON RIPPLE ── */
+  .ripple-host { position: relative; overflow: hidden; }
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    width: 6px; height: 6px;
+    background: rgba(139,58,42,0.25);
+    transform: translate(-50%,-50%) scale(0);
+    animation: rippleAnim 0.55s ease-out forwards;
+    pointer-events: none;
+  }
+  @keyframes rippleAnim {
+    to { transform: translate(-50%,-50%) scale(22); opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     CINEMATIC ANIMATION SYSTEM v2
+     Reference: Linear.app · Stripe · Vercel
+  ═══════════════════════════════════════════════════ */
+
+  /* ── CSS CUSTOM PROPERTIES FOR ANIMATION ── */
+  :root {
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --dur-fast: 180ms;
+    --dur-mid: 420ms;
+    --dur-slow: 680ms;
+  }
+
+  /* ═══════════════════════════════════
+     1. PAGE TRANSITION SYSTEM
+  ═══════════════════════════════════ */
+
+  /* Layer 1 — curtain wipe (accent bar) */
+  #page-curtain {
+    position: fixed;
+    inset: 0;
+    left: var(--sidebar-w);
+    z-index: 900;
+    pointer-events: none;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+  }
+  #page-curtain.sweep-in {
+    animation: curtainIn 0.36s var(--ease-in-out-circ) forwards;
+  }
+  #page-curtain.sweep-out {
+    animation: curtainOut 0.36s var(--ease-in-out-circ) forwards;
+  }
+  @keyframes curtainIn {
+    from { transform: scaleX(0); transform-origin: left; }
+    to   { transform: scaleX(1); transform-origin: left; }
+  }
+  @keyframes curtainOut {
+    from { transform: scaleX(1); transform-origin: right; }
+    to   { transform: scaleX(0); transform-origin: right; }
+  }
+
+  /* Page enter animations — directional */
+  @keyframes pageEnterRight {
+    from { opacity: 0; transform: translateX(32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pageEnterLeft {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pageEnterUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pageExitUp {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(-18px); }
+  }
+  @keyframes pageExitDown {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(18px); }
+  }
+
+  .page.page-enter-right { animation: pageEnterRight var(--dur-mid) var(--ease-out-expo) both; will-change: transform, opacity; }
+  .page.page-enter-left  { animation: pageEnterLeft  var(--dur-mid) var(--ease-out-expo) both; will-change: transform, opacity; }
+  .page.page-enter-up    { animation: pageEnterUp    var(--dur-mid) var(--ease-out-expo) both; will-change: transform, opacity; }
+  .page.page-exit-up     { animation: pageExitUp     0.22s ease-in both; will-change: transform, opacity; }
+  .page.page-exit-down   { animation: pageExitDown   0.22s ease-in both; will-change: transform, opacity; }
+
+
+
+  /* ═══════════════════════════════════
+     2. STAGGER + LIST ANIMATIONS
+  ═══════════════════════════════════ */
+  .fragment-item, .chapter-card, .cert-card, .project-card {
+    transition: var(--transition), box-shadow 0.3s ease;
+  }
+  .fragment-item:hover { box-shadow: 2px 4px 18px rgba(0,0,0,0.06); }
+  .chapter-card:hover  { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
+
+  /* ═══════════════════════════════════
+     3. HERO BANNER — KEN BURNS + PARALLAX
+  ═══════════════════════════════════ */
+
+  /* Ken Burns: animate background-size + background-position instead of transform
+     so the JS parallax (which sets transform) doesn't conflict */
+  @keyframes kenBurns {
+    0%   { background-size: 108% auto; background-position: 50% 50%; }
+    33%  { background-size: 115% auto; background-position: 52% 48%; }
+    66%  { background-size: 112% auto; background-position: 48% 52%; }
+    100% { background-size: 108% auto; background-position: 50% 50%; }
+  }
+  .welcome-banner-bg {
+    animation: kenBurns 24s ease-in-out infinite;
+    will-change: transform, background-size;
+    background-size: 108% auto;
+  }
+
+  /* Banner text: staggered word-level fade-up */
+  .welcome-banner-eyebrow,
+  .welcome-banner-headline,
+  .welcome-banner-body,
+  .welcome-banner-sig {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity var(--dur-slow) var(--ease-out-expo),
+                transform var(--dur-slow) var(--ease-out-expo);
+  }
+  .hero-text-ready .welcome-banner-eyebrow { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+  .hero-text-ready .welcome-banner-headline { opacity: 1; transform: translateY(0); transition-delay: 0.28s; }
+  .hero-text-ready .welcome-banner-body { opacity: 1; transform: translateY(0); transition-delay: 0.46s; }
+  .hero-text-ready .welcome-banner-sig { opacity: 1; transform: translateY(0); transition-delay: 0.62s; }
+
+  /* Depth parallax: multi-layer */
+  .welcome-banner-overlay { will-change: transform; }
+
+  /* ═══════════════════════════════════
+     4. SCROLL REVEAL — 3 ANIMATION VARIANTS
+  ═══════════════════════════════════ */
+
+  /* Base reveal (fade-up) */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.72s var(--ease-out-quart),
+                transform 0.72s var(--ease-out-quart);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Variant A: slide from left */
+  .reveal-left {
+    opacity: 0;
+    transform: translateX(-38px);
+    transition: opacity 0.65s var(--ease-out-expo),
+                transform 0.65s var(--ease-out-expo);
+  }
+  .reveal-left.visible { opacity: 1; transform: translateX(0); }
+
+  /* Variant B: scale up (for images / photo frames) */
+  .reveal-scale {
+    opacity: 0;
+    transform: scale(0.92);
+    filter: blur(4px);
+    transition: opacity 0.7s var(--ease-out-quart),
+                transform 0.7s var(--ease-out-quart),
+                filter 0.7s var(--ease-out-quart);
+  }
+  .reveal-scale.visible { opacity: 1; transform: scale(1); filter: blur(0); }
+
+  /* Variant C: blur-in (for text blocks) */
+  .reveal-blur {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(14px);
+    transition: opacity 0.6s var(--ease-out-expo),
+                filter 0.6s var(--ease-out-expo),
+                transform 0.6s var(--ease-out-expo);
+  }
+  .reveal-blur.visible { opacity: 1; filter: blur(0); transform: translateY(0); }
+
+  /* Staggered reveal for grid children */
+  .reveal-stagger > * {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s var(--ease-out-expo),
+                transform 0.5s var(--ease-out-expo);
+  }
+  .reveal-stagger.visible > *:nth-child(1) { opacity: 1; transform: none; transition-delay: 0.04s; }
+  .reveal-stagger.visible > *:nth-child(2) { opacity: 1; transform: none; transition-delay: 0.12s; }
+  .reveal-stagger.visible > *:nth-child(3) { opacity: 1; transform: none; transition-delay: 0.20s; }
+  .reveal-stagger.visible > *:nth-child(4) { opacity: 1; transform: none; transition-delay: 0.28s; }
+  .reveal-stagger.visible > *:nth-child(n+5) { opacity: 1; transform: none; transition-delay: 0.36s; }
+
+  /* ═══════════════════════════════════
+     5. SIDEBAR MICRO-INTERACTIONS
+  ═══════════════════════════════════ */
+
+  /* Active indicator pill — animated width */
+  .nav-section-btn::after {
+    transition: height 0.3s var(--ease-spring), opacity 0.25s ease;
+  }
+  .nav-section-btn.active::after { opacity: 1; }
+
+  /* Sub-btn hover: slide-in dot */
+  .nav-sub-btn {
+    transition: color var(--transition), padding-left 0.25s var(--ease-out-expo);
+  }
+  .nav-sub-btn:hover { padding-left: 44px; }
+  .nav-sub-btn.active { padding-left: 44px; }
+
+  /* Sidebar logo letterspace spring */
+  .sidebar-header .name {
+    transition: letter-spacing 0.45s var(--ease-spring);
+  }
+  .sidebar-header:hover .name { letter-spacing: 0.07em; }
+
+  /* Section btn arrow rotation with spring */
+  .nav-section-btn .arrow {
+    transition: transform 0.4s var(--ease-spring), opacity 0.25s ease;
+  }
+
+  /* ═══════════════════════════════════
+     6. CHAPTER CARD 3D TILT (perspective)
+  ═══════════════════════════════════ */
+  .chapter-card {
+    transform-style: preserve-3d;
+    transition: transform 0.3s var(--ease-out-quart),
+                border-color var(--transition),
+                box-shadow 0.3s var(--ease-out-quart);
+    will-change: transform;
+  }
+  /* JS handles per-card tilt; ensure no conflict */
+  .chapter-card.tilt-active { transition: none; }
+
+  /* ═══════════════════════════════════
+     7. MAGNETIC NAV BUTTONS
+  ═══════════════════════════════════ */
+  .next-btn, .prev-btn, .back-btn {
+    position: relative;
+    overflow: hidden;
+    transition: border-color var(--transition),
+                background var(--transition),
+                transform 0.25s var(--ease-out-quart);
+    will-change: transform;
+  }
+
+  /* Magnetic pull effect handled by JS */
+  .next-btn:hover, .prev-btn:hover {
+    box-shadow: 0 4px 20px rgba(139,58,42,0.12);
+  }
+
+  /* ═══════════════════════════════════
+     8. WELCOME STAT COUNTER ANIMATION
+  ═══════════════════════════════════ */
+  .welcome-stat {
+    transition: transform 0.25s var(--ease-out-quart), background 0.25s ease;
+  }
+  .welcome-stat:hover { transform: translateY(-3px); }
+
+  /* ═══════════════════════════════════
+     9. PAGE-LOAD INTRO OVERLAY
+  ═══════════════════════════════════ */
+  #intro-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9990;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    pointer-events: none;
+  }
+  #intro-overlay.done {
+    animation: introExit 0.7s var(--ease-in-out-circ) 0.1s forwards;
+  }
+  @keyframes introExit {
+    0%   { opacity: 1; clip-path: inset(0 0 0 0); }
+    100% { opacity: 1; clip-path: inset(0 0 100% 0); }
+  }
+  .intro-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--paper);
+    letter-spacing: 0.12em;
+    opacity: 0;
+    animation: introNameIn 0.6s var(--ease-out-expo) 0.2s forwards;
+  }
+  .intro-sub {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    color: var(--ink-faint);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: introNameIn 0.6s var(--ease-out-expo) 0.42s forwards;
+  }
+  .intro-line {
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    animation: introLineGrow 0.5s var(--ease-out-expo) 0.15s forwards;
+    margin-bottom: 8px;
+  }
+  @keyframes introNameIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes introLineGrow {
+    from { width: 0; }
+    to   { width: 56px; }
+  }
+
+  /* ═══════════════════════════════════
+     10. IMAGE LAZY-LOAD FADE
+  ═══════════════════════════════════ */
+  img.lazy-img {
+    opacity: 0;
+    filter: blur(6px);
+    transition: opacity 0.55s var(--ease-out-quart),
+                filter 0.55s var(--ease-out-quart);
+  }
+  img.lazy-img.loaded {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  /* ═══════════════════════════════════
+     11. CERT MODAL ANIMATION
+  ═══════════════════════════════════ */
+  #cert-modal.active {
+    animation: modalBgIn 0.3s ease forwards;
+  }
+  @keyframes modalBgIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  #cert-modal.active #cert-box {
+    animation: modalBoxIn 0.38s var(--ease-out-expo) forwards;
+  }
+  @keyframes modalBoxIn {
+    from { opacity: 0; transform: scale(0.94) translateY(20px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* ═══════════════════════════════════
+     12. SCROLL INDICATOR PULSE
+  ═══════════════════════════════════ */
+  @keyframes scrollBounce {
+    0%, 100% { opacity: 0.6; transform: translateX(-50%) translateY(0); }
+    50%       { opacity: 1; transform: translateX(-50%) translateY(8px); }
+  }
+
+  /* ═══════════════════════════════════
+     13. ENHANCED RIPPLE
+  ═══════════════════════════════════ */
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    width: 6px; height: 6px;
+    background: rgba(139,58,42,0.22);
+    transform: translate(-50%,-50%) scale(0);
+    animation: rippleAnim 0.62s var(--ease-out-expo) forwards;
+    pointer-events: none;
+  }
+  @keyframes rippleAnim {
+    to { transform: translate(-50%,-50%) scale(28); opacity: 0; }
+  }
+
+  /* ═══════════════════════════════════
+     14. FRAGMENT CONTENT TYPOGRAPHY REVEAL
+     Only fires when the page is active
+  ═══════════════════════════════════ */
+  .page.active .prose p {
+    opacity: 0;
+    transform: translateY(12px);
+    animation: proseIn 0.55s var(--ease-out-expo) forwards;
+  }
+  /* stagger via nth-child */
+  .page.active .prose p:nth-child(1) { animation-delay: 0.05s; }
+  .page.active .prose p:nth-child(2) { animation-delay: 0.14s; }
+  .page.active .prose p:nth-child(3) { animation-delay: 0.23s; }
+  .page.active .prose p:nth-child(4) { animation-delay: 0.32s; }
+  .page.active .prose p:nth-child(n+5) { animation-delay: 0.40s; }
+  @keyframes proseIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── ENHANCED NAV BUTTONS ── */
+  .next-btn, .prev-btn, .back-btn { position: relative; overflow: hidden; }
+
+  /* ══════════════════════════════════════════
+     [PATCH A] 阅读进度条 + 增强面包屑
+  ══════════════════════════════════════════ */
+  #reading-progress-bar {
+    position: fixed;
+    top: 0;
+    left: var(--sidebar-w);
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    transform-origin: left;
+    transform: scaleX(0);
+    z-index: 9500;
+    transition: transform 0.08s linear;
+    pointer-events: none;
+    display: none;
+  }
+  body.reading-mode #reading-progress-bar { display: block; }
+
+  .chapter-progress {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 32px;
+    padding: 16px 0 0;
+  }
+  .chapter-progress-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: rgba(139,58,42,0.15);
+    cursor: pointer;
+    transition: var(--transition);
+    flex-shrink: 0;
+  }
+  .chapter-progress-dot.current { background: var(--accent); transform: scale(1.4); }
+  .chapter-progress-dot.done { background: var(--accent-light); opacity: 0.55; }
+  .chapter-progress-dot:hover { background: var(--accent); transform: scale(1.3); }
+  .chapter-progress-label {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    color: var(--ink-faint);
+    letter-spacing: 0.1em;
+    margin-left: 10px;
+    font-weight: 300;
+  }
+
+  .breadcrumb {
+    background: rgba(139,58,42,0.03);
+    border: 1px solid rgba(139,58,42,0.08);
+    padding: 10px 16px;
+    border-radius: 2px;
+  }
+  .breadcrumb span:last-child { color: var(--ink); font-weight: 500; }
+
+  /* ══════════════════════════════════════════
+     [PATCH B] 统计数据动态计数组件
+  ══════════════════════════════════════════ */
+  .stats-showcase {
+    padding: 56px 72px;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .stats-showcase::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 300px 300px;
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .stats-showcase-inner { position: relative; z-index: 1; }
+  .stats-showcase-eyebrow {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: rgba(247,243,238,0.3);
+    text-transform: uppercase;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .stats-showcase-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: var(--accent-light);
+    flex-shrink: 0;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .stat-item {
+    padding: 36px 32px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+    transition: background 0.3s ease;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-item:hover { background: rgba(255,255,255,0.02); }
+  .stat-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 80%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s ease;
+  }
+  .stat-item:hover::after { transform: scaleX(1); }
+
+  .stat-icon-wrap {
+    width: 30px; height: 30px;
+    margin-bottom: 20px;
+    opacity: 0.45;
+    transition: opacity 0.3s ease;
+  }
+  .stat-item:hover .stat-icon-wrap { opacity: 0.85; }
+  .stat-icon-wrap svg {
+    width: 100%; height: 100%;
+    fill: none;
+    stroke: var(--accent-light);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 54px;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
+    margin-bottom: 10px;
+    letter-spacing: -0.02em;
+    transition: color 0.3s ease;
+    display: inline-block;
+  }
+  .stat-item:hover .stat-number { color: var(--accent-light); }
+  .stat-unit {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 16px;
+    color: var(--accent-light);
+    font-weight: 300;
+    margin-left: 2px;
+  }
+  .stat-keyword {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1;
+    margin-bottom: 14px;
+    letter-spacing: 0.08em;
+    transition: color 0.3s ease;
+    display: block;
+  }
+  .stat-item:hover .stat-keyword { color: var(--accent-light); }
+  .stat-label {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(247,243,238,0.8);
+    margin-bottom: 6px;
+    letter-spacing: 0.04em;
+  }
+  .stat-sublabel {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: rgba(247,243,238,0.3);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+  .stat-tag-dark {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border: 1px solid rgba(139,58,42,0.35);
+    color: var(--accent-light);
+    border-radius: 20px;
+  }
+
+  /* ══════════════════════════════════════════
+     [PATCH C] 学术论文展示组件
+  ══════════════════════════════════════════ */
+  .paper-list { display: flex; flex-direction: column; gap: 16px; }
+
+  .paper-card {
+    background: var(--paper-warm);
+    border: 1px solid rgba(139,58,42,0.1);
+    padding: 28px 30px;
+    position: relative;
+    transition: border-color var(--transition), box-shadow var(--transition);
+    overflow: hidden;
+  }
+  .paper-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.35s ease;
+  }
+  .paper-card:hover { border-color: rgba(139,58,42,0.28); box-shadow: 0 6px 28px rgba(0,0,0,0.07); }
+  .paper-card:hover::before { transform: scaleY(1); }
+
+  .paper-num-badge {
+    position: absolute;
+    top: 14px; right: 18px;
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 700;
+    color: rgba(139,58,42,0.045);
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .paper-card-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+  }
+  .paper-title-en {
+    font-family: 'Playfair Display', serif;
+    font-size: 16.5px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .paper-title-cn {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.55;
+    flex: 1;
+  }
+  .paper-status {
+    flex-shrink: 0;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+    margin-top: 4px;
+  }
+  .paper-status.s-review {
+    background: rgba(184,150,46,0.1); color: var(--gold);
+    border: 1px solid rgba(184,150,46,0.22);
+  }
+  .paper-status.s-accepted {
+    background: rgba(55,125,70,0.09); color: #3a7d4a;
+    border: 1px solid rgba(55,125,70,0.2);
+  }
+  .paper-status.s-published {
+    background: rgba(139,58,42,0.08); color: var(--accent);
+    border: 1px solid rgba(139,58,42,0.2);
+  }
+  .paper-venue {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11.5px;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .paper-venue::before {
+    content: '';
+    display: inline-block;
+    width: 14px; height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+  .paper-authors {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    margin-bottom: 14px;
+    line-height: 1.7;
+  }
+  .paper-authors .me {
+    color: var(--ink);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+  }
+  .paper-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .paper-kw {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    padding: 3px 10px;
+    background: rgba(139,58,42,0.06);
+    color: var(--ink-light);
+    border-radius: 2px;
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(139,58,42,0.1);
+  }
+  .paper-abstract {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 13px;
+    color: var(--ink-faint);
+    line-height: 1.9;
+    font-weight: 300;
+    border-left: 2px solid rgba(139,58,42,0.15);
+    padding-left: 14px;
+    margin-bottom: 18px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .paper-card.expanded .paper-abstract { display: block; }
+  .paper-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(139,58,42,0.06);
+    padding-top: 16px;
+  }
+  .paper-btn {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    padding: 7px 18px;
+    border: 1px solid rgba(139,58,42,0.22);
+    background: none;
+    cursor: pointer;
+    color: var(--ink-light);
+    border-radius: 2px;
+    transition: var(--transition);
+    letter-spacing: 0.04em;
+  }
+  .paper-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(139,58,42,0.04); }
+  .paper-btn.pb-primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .paper-btn.pb-primary:hover { background: #7a3224; }
+  .paper-expand-btn {
+    margin-left: auto;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: color var(--transition);
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .paper-expand-btn:hover { color: var(--accent); }
+  .paper-expand-btn .peb-arrow { display: inline-block; transition: transform 0.25s ease; font-size: 10px; }
+  .paper-card.expanded .paper-expand-btn .peb-arrow { transform: rotate(180deg); }
+
+  /* ══════════════════════════════════════════
+     [PATCH D] 汉堡菜单 + 移动端
+  ══════════════════════════════════════════ */
+  #hamburger {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 9001;
+    width: 42px; height: 42px;
+    background: var(--ink);
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    border-radius: 2px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.3);
+    transition: background var(--transition);
+  }
+  #hamburger:hover { background: #2a2018; }
+  #hamburger span {
+    display: block;
+    width: 18px; height: 1.5px;
+    background: var(--paper);
+    border-radius: 1px;
+    transition: transform 0.28s ease, opacity 0.2s ease;
+    transform-origin: center;
+  }
+  #hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  #hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  #hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  #sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(26,20,16,0.52);
+    z-index: 150;
+    backdrop-filter: blur(2px);
+    animation: fadeIn 0.25s ease;
+  }
+  #sidebar-overlay.active { display: block; }
+
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 0px; }
+    #hamburger { display: flex; }
+    #sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 260px;
+      z-index: 200;
+      box-shadow: 4px 0 24px rgba(0,0,0,0.3);
+    }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; }
+    .page, .auto-index, .section-index,
+    .fragment-content, .coming-soon { padding: 48px 22px 40px; }
+    .page-hero-strip { width: calc(100% + 44px); margin: -48px -22px 36px; }
+    .welcome-body-section { padding: 40px 22px; }
+    .stats-showcase { padding: 44px 22px; }
+    .page-title { font-size: 28px; }
+    .page-title-cn { font-size: 28px; }
+    .welcome-banner-content { padding: 60px 22px 80px; }
+    .welcome-banner-headline { font-size: 30px; line-height: 1.6; }
+    .welcome-banner-body { font-size: 13.5px; max-width: 100%; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); padding: 28px 22px; }
+    .stat-item:last-child { border-bottom: none; }
+    .stat-number { font-size: 42px; }
+    .welcome-photos { grid-template-columns: 1fr; }
+    .paper-card-head { flex-direction: column; align-items: flex-start; }
+    .paper-num-badge { font-size: 40px; }
+    .cert-grid { grid-template-columns: 1fr 1fr; }
+    .chapter-cards { grid-template-columns: 1fr 1fr; }
+    .fragment-list { grid-template-columns: 1fr; }
+    .page-hero-strip { height: 160px; }
+    .page-hero-strip-label { font-size: 13px; }
+    #edit-toolbar { left: 0; }
+    body.edit-active #main { padding-bottom: 70px; }
+    #reading-progress-bar { left: 0; }
+  }
+  @media (max-width: 480px) {
+    .cert-grid { grid-template-columns: 1fr; }
+    .chapter-cards { grid-template-columns: 1fr; }
+    .welcome-banner-headline { font-size: 26px; }
+    .fragment-list { grid-template-columns: 1fr; }
+    .fragment-item { grid-template-columns: 36px 1fr; }
+    .fragment-item::after { display: none; }
+    .page { padding: 40px 18px; }
+    .page-hero-strip { width: calc(100% + 36px); margin: -40px -18px 36px; height: 140px; }
+  }
+
+  /* ── WELCOME: social / contact row ── */
+  .welcome-contact-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+  .wc-link {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    color: rgba(247,243,238,0.72);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-bottom: 1px solid rgba(247,243,238,0.2);
+    padding-bottom: 1px;
+    transition: color 0.25s ease, border-color 0.25s ease;
+  }
+  .wc-link:hover { color: #f7f3ee; border-color: rgba(247,243,238,0.7); }
+  .wc-link svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  .wc-sep { color: rgba(247,243,238,0.25); font-size: 11px; }
+
+  /* ── WELCOME: recent news timeline ── */
+  .welcome-news {
+    padding: 48px 72px 40px;
+    max-width: 860px;
+  }
+  .welcome-news-label {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .news-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: 20px;
+  }
+  .news-timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    opacity: 0.3;
+  }
+  .news-item {
+    display: flex;
+    gap: 16px;
+    padding: 10px 0;
+    position: relative;
+  }
+  .news-dot {
+    position: absolute;
+    left: -19px;
+    top: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-light);
+    flex-shrink: 0;
+  }
+  .news-item:first-child .news-dot { background: var(--accent); box-shadow: 0 0 0 3px rgba(139,58,42,0.15); }
+  .news-date {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 300;
+    min-width: 70px;
+    padding-top: 1px;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+  .news-text {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 13.5px;
+    color: var(--ink-light);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+  .news-text strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .news-tag {
+    display: inline-block;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+    padding: 1px 7px;
+    border-radius: 20px;
+    margin-left: 6px;
+    vertical-align: middle;
+    background: rgba(139,58,42,0.08);
+    color: var(--accent);
+  }
+  .news-item-extra { display: none; }
+  .news-item-extra.visible { display: flex; }
+  .news-more-btn {
+    margin-top: 14px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .news-more-btn:hover { opacity: 1; }
+
+  /* ══════════════════════════════════════════
+     [REDESIGN 2026-07] academic profile refinement
+  ══════════════════════════════════════════ */
+  :root {
+    --ink-faint: #6c5e52;
+    --gold: #8a6f1d;
+  }
+
+  body { overflow: hidden; }
+  #main {
+    height: 100vh;
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+  }
+
+  .nav-section-btn:focus-visible,
+  .nav-sub-btn:focus-visible,
+  .wc-link:focus-visible,
+  .welcome-nav-card:focus-visible,
+  .paper-btn:focus-visible,
+  .proj-btn:focus-visible,
+  .cert-card:focus-visible,
+  #cert-close:focus-visible,
+  .news-more-btn:focus-visible {
+    outline: 2px solid var(--accent-light);
+    outline-offset: 3px;
+  }
+
+  .welcome-banner {
+    min-height: 78vh;
+    min-height: 78dvh;
+    background: #1a1410;
+  }
+  .welcome-banner-bg {
+    top: 0;
+    height: 100%;
+    background-image: url('assets/template/scenery.svg');
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat;
+    animation: none !important;
+    will-change: transform;
+  }
+  .welcome-banner-overlay {
+    background:
+      linear-gradient(90deg, rgba(18,13,10,0.94) 0%, rgba(18,13,10,0.82) 34%, rgba(18,13,10,0.36) 68%, rgba(18,13,10,0.12) 100%),
+      linear-gradient(0deg, rgba(18,13,10,0.58) 0%, rgba(18,13,10,0.08) 44%, rgba(18,13,10,0.2) 100%);
+  }
+  .welcome-banner-content {
+    max-width: 760px;
+    padding: 82px 80px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .welcome-banner-name {
+    font-family: 'Noto Serif SC', 'SimSun', serif;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.08;
+    color: #f7f3ee;
+    margin: 0 0 18px;
+    letter-spacing: 0;
+    text-shadow: 0 2px 28px rgba(0,0,0,0.48);
+  }
+  .welcome-banner-headline {
+    font-size: 34px;
+    line-height: 1.55;
+    margin-bottom: 24px;
+  }
+  .welcome-banner-body {
+    max-width: 560px;
+    color: rgba(247,243,238,0.78);
+    overflow-wrap: break-word;
+  }
+  .welcome-banner-eyebrow,
+  .welcome-banner-name,
+  .welcome-banner-headline,
+  .welcome-banner-body,
+  .welcome-banner-sig {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity var(--dur-slow) var(--ease-out-expo),
+                transform var(--dur-slow) var(--ease-out-expo);
+  }
+  .hero-text-ready .welcome-banner-name { opacity: 1; transform: translateY(0); transition-delay: 0.2s; }
+  .hero-text-ready .welcome-banner-headline { transition-delay: 0.34s; }
+  .hero-text-ready .welcome-banner-body { transition-delay: 0.48s; }
+  .hero-text-ready .welcome-banner-sig { transition-delay: 0.62s; }
+
+  .stats-showcase {
+    padding: 42px 72px 46px;
+    background: #f0e9de;
+    border-top: 1px solid rgba(139,58,42,0.1);
+    border-bottom: 1px solid rgba(139,58,42,0.08);
+  }
+  .stats-showcase::before { opacity: 0; }
+  .stats-showcase-eyebrow {
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .stats-grid {
+    border: none;
+    gap: 14px;
+  }
+  .stat-item {
+    background: rgba(255,255,255,0.46);
+    border: 1px solid rgba(139,58,42,0.13);
+    border-radius: 6px;
+    padding: 24px 24px 26px;
+    transition: transform var(--transition), border-color var(--transition), background var(--transition);
+  }
+  .stat-item + .stat-item { border-left: 1px solid rgba(139,58,42,0.13); }
+  .stat-item:hover {
+    background: rgba(255,255,255,0.68);
+    border-color: rgba(139,58,42,0.26);
+    transform: translateY(-2px);
+  }
+  .stat-item::after { display: none; }
+  .stat-icon-wrap {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 16px;
+    opacity: 0.78;
+  }
+  .stat-keyword {
+    font-size: 22px;
+    line-height: 1.34;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+  .stat-item:hover .stat-keyword { color: var(--accent); }
+  .stat-label {
+    color: var(--ink);
+    font-size: 13px;
+  }
+  .stat-sublabel {
+    color: var(--ink-faint);
+    font-size: 11.5px;
+  }
+  .stat-tag-dark {
+    border-color: rgba(139,58,42,0.22);
+    color: var(--accent);
+    background: rgba(139,58,42,0.05);
+  }
+
+  .welcome-news {
+    padding-top: 42px;
+    padding-bottom: 44px;
+  }
+  .news-text { color: var(--ink-light); }
+  .news-date { color: var(--ink-faint); }
+
+  .page-hero-strip img {
+    filter: brightness(0.76) contrast(0.98) sepia(0.04);
+  }
+  #page-research .page-hero-strip img,
+  #page-projects .page-hero-strip img {
+    object-position: center 48%;
+  }
+
+  .project-card {
+    background: rgba(255,255,255,0.36);
+    border-radius: 6px;
+  }
+  .project-card + .project-card { margin-top: 12px; }
+  .project-featured {
+    border-color: rgba(139,58,42,0.18);
+  }
+  .project-desc {
+    font-family: 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
+    font-size: 13px;
+    color: var(--ink-light);
+    margin: 9px 0 14px;
+    line-height: 1.75;
+    font-weight: 300;
+  }
+  .welcome-nav-card,
+  .cert-card,
+  .paper-card {
+    border-radius: 6px;
+  }
+
+  #cert-modal[aria-hidden="false"] #cert-box {
+    outline: 1px solid rgba(247,243,238,0.12);
+  }
+
+  @media (max-width: 720px) {
+    .welcome-banner-content { padding: 68px 22px 86px; }
+    .welcome-banner-name { font-size: 42px; }
+    .welcome-banner-headline { font-size: 25px; line-height: 1.55; }
+    .welcome-banner-body { max-width: 330px; font-size: 14px; line-height: 1.95; }
+    .welcome-contact-row { gap: 12px; }
+    .wc-sep { display: none; }
+    .stats-showcase { padding: 34px 22px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .stat-item + .stat-item { border-left: 1px solid rgba(139,58,42,0.13); }
+    .welcome-news { padding: 38px 22px; }
+    .news-item { gap: 12px; }
+    .news-date { min-width: 58px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.001ms !important;
+    }
+    .welcome-banner-bg,
+    .welcome-banner-overlay,
+    .welcome-img-strip img {
+      transform: none !important;
+      will-change: auto !important;
+    }
+  }
+</style>
+<meta name="description" content="可复用的个人主页模板，包含虚构资料、成长写作示例与升学求职填写指南。">
+<link rel="stylesheet" href="assets/template/template.css">
+</head>
+<body data-template-storage="portfolio-template-fictional-v1">
+<div id="intro-overlay"><div class="intro-line"></div><div class="intro-name" data-edit data-profile="name">林川</div><div class="intro-sub">虚构示例 · 个人主页模板</div></div>
+<div id="page-curtain"></div>
+<nav id="sidebar" aria-label="主页导航"><div class="sidebar-header" onclick="showPage('welcome')"><div class="name" data-edit data-profile="name">林川</div><div class="subtitle">虚构示例 · 个人主页模板</div></div><div class="sidebar-nav">
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="welcome" onclick="showPage('welcome')"><span data-edit>首页</span></button></div>
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="research" onclick="showPage('research')"><span data-edit>科研示例</span></button></div>
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="projects" onclick="showPage('projects')"><span data-edit>项目示例</span></button></div>
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="resume" onclick="showPage('resume')"><span data-edit>简历示例</span></button></div>
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="competition" onclick="showPage('competition')"><span data-edit>竞赛 · 荣誉示例</span></button></div>
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="guide" onclick="showPage('guide')"><span data-edit>使用与写作指南</span></button></div>
+<div class="nav-section"><button class="nav-section-btn" data-nav-page="auto" onclick="toggleSection(this, 'auto')"><span data-edit>成长故事 · 写作示例</span><span class="arrow">▶</span></button><div class="nav-subsections" id="sub-auto"><button class="nav-sub-btn" onclick="showPage('auto-index')">概览</button>
+<button class="nav-sub-btn" onclick="showChapterIndex('childhood')">童年</button>
+<button class="nav-sub-btn" onclick="showChapterIndex('primary')">小学</button>
+<button class="nav-sub-btn" onclick="showChapterIndex('middle')">初中</button>
+<button class="nav-sub-btn" onclick="showChapterIndex('high')">高中</button>
+<button class="nav-sub-btn" onclick="showChapterIndex('college')">大学</button>
+</div></div></div><div class="sidebar-footer">Template · 示例附件可预览<button class="admin-trigger" onclick="enterEditMode()">编辑示例</button></div></nav>
+<main id="main">
+<div class="page" id="page-welcome"><div class="welcome-banner"><div class="welcome-banner-bg"></div><div class="welcome-banner-overlay"></div><div class="welcome-banner-content">
+<div class="welcome-banner-eyebrow" data-edit data-profile="identity">星桥大学（虚构） · 信息工程学院 · 计算机科学与技术 · 2023–2027</div>
+<h1 class="welcome-banner-name" data-edit tabindex="-1" data-profile="name">林川</h1>
+<div class="welcome-banner-headline" data-edit>从一个问题开始，
+把想法做成可检查的作品。</div>
+<div class="welcome-banner-body" data-edit>虚构示例 · 个人主页模板。用研究问题、个人贡献、作品与证据，介绍你的学习方向；用真实的成长片段，解释这些方向如何形成。</div>
+<div class="welcome-banner-sig" data-edit data-profile="signature">— 林川 · 虚构人物</div>
+<div class="welcome-contact-row"><a href="mailto:lin.chuan@example.com" class="wc-link"><span data-edit data-profile="email">lin.chuan@example.com</span></a><span class="wc-sep">·</span><a href="assets/template/resume-sample.pdf" download class="wc-link">下载示例简历</a><span class="wc-sep">·</span><a href="#research" onclick="showPage('research'); return false;" class="wc-link">查看科研示例</a><span class="wc-sep">·</span><a href="#guide" onclick="showPage('guide'); return false;" class="wc-link">开始替换内容</a></div></div><div class="welcome-banner-scroll">向下探索 · 每份材料均为虚构示例</div></div>
+<div class="stats-showcase reveal" id="stats-showcase"><div class="stats-showcase-inner"><div class="stats-showcase-eyebrow">Show your work · 方向与证据</div><div class="stats-grid">
+<div class="stat-item"><span class="stat-keyword" data-edit>研究示例</span><div class="stat-label" data-edit>CampusFlow · 校园需求预测</div><div class="stat-sublabel" data-edit>问题、基线、实验记录与局限，展示研究思路。</div><div class="stat-tag-dark" data-edit>虚构论文 · 方法与验证</div></div>
+<div class="stat-item"><span class="stat-keyword" data-edit>作品示例</span><div class="stat-label" data-edit>StudyLens · 学习资料检索</div><div class="stat-sublabel" data-edit>职责、实现、使用反馈与演示，展示实际贡献。</div><div class="stat-tag-dark" data-edit>虚构项目 · 交付与反馈</div></div>
+<div class="stat-item"><span class="stat-keyword" data-edit>成长示例</span><div class="stat-label" data-edit>25 个片段 · 每篇附写作提示</div><div class="stat-sublabel" data-edit>从童年的观察到大学的实验，展示方向如何形成。</div><div class="stat-tag-dark" data-edit>虚构经历 · 场景与反思</div></div>
+</div></div></div><div class="welcome-news reveal"><div class="welcome-news-label">动态写法 · 全部为虚构示例</div><div class="news-timeline">
+<div class="news-item"><div class="news-dot"></div><div class="news-date" data-edit>2026.09</div><div class="news-text"><span data-edit>整理 StudyLens 的失败案例与演示说明。</span><span class="news-tag" data-edit>示例 · 迭代</span></div></div>
+<div class="news-item"><div class="news-dot"></div><div class="news-date" data-edit>2026.06</div><div class="news-text"><span data-edit>完成 CampusFlow 课程研究报告与复现清单。</span><span class="news-tag" data-edit>示例 · 报告完成</span></div></div>
+<div class="news-item"><div class="news-dot"></div><div class="news-date" data-edit>2025.11</div><div class="news-text"><span data-edit>星桥建模挑战赛获校级一等奖。</span><span class="news-tag" data-edit>虚构 · 获奖</span></div></div>
+<div class="news-item news-item-extra"><div class="news-dot"></div><div class="news-date" data-edit>2025.06</div><div class="news-text"><span data-edit>学习资料检索原型完成第一轮模拟测试。</span><span class="news-tag" data-edit>示例 · 项目</span></div></div>
+<div class="news-item news-item-extra"><div class="news-dot"></div><div class="news-date" data-edit>2024.12</div><div class="news-text"><span data-edit>获得星桥大学成长奖学金。</span><span class="news-tag" data-edit>虚构 · 荣誉</span></div></div>
+<div class="news-item news-item-extra"><div class="news-dot"></div><div class="news-date" data-edit>2023.09</div><div class="news-text"><span data-edit>进入星桥大学计算机科学与技术专业。</span><span class="news-tag" data-edit>虚构 · 入学</span></div></div>
+</div><button class="news-more-btn" onclick="toggleNewsMore(this)">查看更多 ↓</button></div><div class="welcome-img-strip reveal"><img src="assets/template/campus.svg" alt="虚构校园场景插画"><div class="welcome-img-strip-overlay"></div></div><div class="welcome-body-section">
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<div class="reveal"><div class="welcome-label">从这里开始</div><div class="welcome-nav-grid">
+<div class="welcome-nav-card" onclick="showPage('research')"><div class="card-title" data-edit>科研示例</div><div class="card-sub" data-edit>问题、贡献与证据 →</div></div>
+<div class="welcome-nav-card" onclick="showPage('projects')"><div class="card-title" data-edit>项目示例</div><div class="card-sub" data-edit>职责、作品与验证 →</div></div>
+<div class="welcome-nav-card" onclick="showPage('resume')"><div class="card-title" data-edit>简历示例</div><div class="card-sub" data-edit>简洁概览与附件 →</div></div>
+<div class="welcome-nav-card" onclick="showPage('competition')"><div class="card-title" data-edit>竞赛 · 荣誉示例</div><div class="card-sub" data-edit>成果名称与证明 →</div></div>
+<div class="welcome-nav-card" onclick="showPage('auto-index')"><div class="card-title" data-edit>成长故事</div><div class="card-sub" data-edit>虚构示例与写作提示 →</div></div>
+<div class="welcome-nav-card" onclick="showPage('guide')"><div class="card-title" data-edit>使用与写作指南</div><div class="card-sub" data-edit>按保研、考研、求职调整 →</div></div>
+</div></div></div></div>
+<div class="page" id="page-research">
+<div class="page-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Research · 虚构研究示例</div></div>
+<div class="page-eyebrow" data-edit>Fictional Research · 虚构示例</div><h2 class="page-title-cn" data-edit>科研示例</h2><p class="page-subtitle" data-edit>研究方向：需求预测与资料检索 · 重点展示问题、贡献、比较与局限</p><div class="divider"></div>
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>每篇成果写明题目、作者与个人贡献、真实状态、研究问题、验证方法和材料入口。没有论文时，可以用课程研究、实验报告或复现记录展示方法。</p></aside>
+<div class="cert-section"><div class="cert-section-label">论文 / 课程研究展示 · 2 份虚构样稿</div><div class="paper-list">
+<div class="paper-card" id="paper-1"><div class="paper-num-badge">01</div><div class="paper-card-head"><div class="paper-title-cn" data-edit>CampusFlow: 面向校园服务的需求预测实验</div><span class="paper-status s-accepted">虚构示例</span></div><div class="paper-venue" data-edit>课程研究样稿 · 虚构示例 · 无真实发表、投稿或录用记录</div><div class="paper-authors" data-edit>虚构作者：林川 · 负责问题定义、基线实验与复现说明</div><div class="paper-keywords"><span class="paper-kw" data-edit>需求预测</span><span class="paper-kw" data-edit>时间序列</span><span class="paper-kw" data-edit>对照实验</span></div><div class="paper-abstract" data-edit>【虚构摘要】以模拟校园服务记录为教学材料，比较历史均值与带有时间特征的预测方法。固定训练与测试范围，说明误差指标、数据处理步骤以及不同时间段的表现差异。报告保留失败实验和局限，用于演示如何呈现一个可检查的研究过程。全部数据与结果均为虚构教学示例。</div><div class="paper-actions"><button class="paper-btn pb-primary" onclick="openCert('pdf','assets/template/paper-one-sample.pdf','CampusFlow: 面向校园服务的需求预测实验 · 虚构样稿')">预览示例全文</button><a class="paper-btn" href="assets/template/paper-one-sample.pdf" download>下载示例 PDF</a><button class="paper-expand-btn" onclick="togglePaperAbstract('paper-1', this)">摘要 <span class="peb-arrow">▼</span></button></div></div>
+<div class="paper-card" id="paper-2"><div class="paper-num-badge">02</div><div class="paper-card-head"><div class="paper-title-cn" data-edit>StudyLens: 学习资料检索的可解释排序</div><span class="paper-status s-accepted">虚构示例</span></div><div class="paper-venue" data-edit>研究报告样稿 · 虚构示例 · 无真实发表、投稿或录用记录</div><div class="paper-authors" data-edit>虚构作者：林川 · 负责查询案例、评价设计与结果解释</div><div class="paper-keywords"><span class="paper-kw" data-edit>资料检索</span><span class="paper-kw" data-edit>排序解释</span><span class="paper-kw" data-edit>错误分析</span></div><div class="paper-abstract" data-edit>【虚构摘要】围绕模拟课程资料的检索需求，设计查询案例、相关性判断和结果解释。报告展示关键词匹配的基线，讨论重排方法与解释界面如何影响可用性，并保留容易混淆的查询作为失败案例。该样稿只演示研究写法，不对应真实实验或发表成果。</div><div class="paper-actions"><button class="paper-btn pb-primary" onclick="openCert('pdf','assets/template/paper-two-sample.pdf','StudyLens: 学习资料检索的可解释排序 · 虚构样稿')">预览示例全文</button><a class="paper-btn" href="assets/template/paper-two-sample.pdf" download>下载示例 PDF</a><button class="paper-expand-btn" onclick="togglePaperAbstract('paper-2', this)">摘要 <span class="peb-arrow">▼</span></button></div></div>
+</div></div><div class="guide-card">
+<h3 data-edit>把材料与结论对应起来</h3>
+<p data-edit>主页写明你做了哪些步骤；报告提供实验设置、结果和限制；附件入口链接到同一份材料。真实成果可补充规范引用和可核验链接，示例论文不具有真实学术身份。</p>
+</div></div>
+<div class="page" id="page-projects">
+<div class="page-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Projects · 虚构作品示例</div></div>
+<div class="page-eyebrow" data-edit>Fictional Projects · 虚构示例</div><h2 class="page-title-cn" data-edit>项目示例</h2><p class="page-subtitle" data-edit>用问题、职责、动作、结果与证据，讲清你把什么做成了作品。</p><div class="divider"></div>
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>每个项目保留 4–6 句核心信息：服务对象、解决问题、个人职责、关键动作、验证方式和材料入口。技术词汇应能在面谈中解释，团队成果须说明个人负责的部分。</p></aside>
+<div class="project-card project-featured"><h3 class="project-title" data-edit>StudyLens · 学习资料检索原型（虚构）</h3><div class="project-meta" data-edit>2025.03–2026.09 · 团队教学示例 · 角色：查询与评价模块</div><p class="project-desc" data-edit>【虚构示例】为模拟课程资料建立检索入口，提供排序结果与匹配依据。我负责整理查询类型、设计相关性记录表和分析失败案例；演示包含检索、解释和问题反馈三步流程。验证字段展示测试场景、失败样例与修改记录，所有材料均为教学占位。</p><div class="project-actions"><button class="proj-btn" onclick="openCert('pdf','assets/template/paper-two-sample.pdf','StudyLens · 虚构研究报告')">查看示例报告</button><button class="proj-btn" onclick="showPage('guide')">如何替换作品材料</button></div></div>
+<div class="project-card project-featured"><h3 class="project-title" data-edit>CampusFlow · 校园服务分析看板（虚构）</h3><div class="project-meta" data-edit>2025.01–2026.06 · 课程项目示例 · 角色：分析与报告</div><p class="project-desc" data-edit>【虚构示例】把模拟校园服务记录整理为可阅读的需求图表。我负责清洗规则、基线比较与报告组织，制作了从数据说明到结果解释的展示流程。完成后以同伴复现检查说明是否完整；演示图片展示结构，不对应真实产品运行数据。</p><div class="project-actions"><button class="proj-btn" onclick="openCert('img','assets/template/project-demo.svg','CampusFlow · 虚构项目演示图')">查看示例演示图</button><button class="proj-btn" onclick="showPage('guide')">如何替换作品材料</button></div></div>
+<div class="project-card project-featured"><h3 class="project-title" data-edit>阅读进度小工具（虚构）</h3><div class="project-meta" data-edit>2024.09–2024.12 · 个人练习示例 · 角色：界面与实现</div><p class="project-desc" data-edit>【虚构示例】围绕“读到哪里、下一步读什么”的问题，设计记录、筛选和回顾三个功能。我负责页面结构与本地记录方案，并用空输入、重复记录等案例检查边界。展示时说明已完成部分和待改进项，让小作品也有明确的贡献与证据。</p><div class="project-actions"><button class="proj-btn" onclick="showFragment('m2')">阅读练习经历的写法</button><button class="proj-btn" onclick="showPage('guide')">如何替换作品材料</button></div></div>
+</div>
+<div class="page" id="page-resume" style="padding:0;max-width:100%;"><div style="padding:28px 32px 20px;border-bottom:1px solid rgba(26,20,16,0.08);">
+<div class="page-eyebrow" data-edit>Resume Sample · 虚构示例</div><h2 class="page-title-cn" data-edit>简历示例</h2><p class="page-subtitle" data-edit>林川 · 星桥大学（虚构） · 计算机科学与技术 · 2023–2027</p><div class="divider"></div>
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<div class="project-actions"><a href="assets/template/resume-sample.pdf" download class="proj-btn">下载虚构简历 PDF</a><button class="proj-btn" onclick="openCert('pdf','assets/template/transcript-sample.pdf','虚构示例 · 成绩单结构')">预览示例成绩单</button><a href="assets/template/transcript-sample.pdf" download class="proj-btn">下载示例成绩单</a></div>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>简历先说明目标方向与教育背景，再选择最相关的 2–3 段项目或研究经历。主页负责展开，简历负责概览；两者的日期、职责和成果状态要一致。</p></aside>
+</div><iframe id="resume-frame" title="虚构简历 PDF 示例预览" data-pdf-src="assets/template/resume-sample.pdf#toolbar=0&navpanes=0&scrollbar=0&view=FitH" style="width:100%;height:78vh;border:none;display:block;"></iframe><p class="template-notice" style="padding:16px 32px;">如浏览器无法内嵌 PDF，请使用上方下载入口打开示例材料。</p></div>
+<div class="page" id="page-competition">
+<div class="page-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Awards · 虚构证书示例</div></div>
+<div class="page-eyebrow" data-edit>Fictional Awards · 虚构示例</div><h2 class="page-title-cn" data-edit>竞赛 · 荣誉示例</h2><p class="page-subtitle" data-edit>名称、范围、等级、时间与个人贡献，应与真实证明材料一致。</p><div class="divider"></div>
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>精选与申请或岗位相关的成果。写清主办方、奖项层级、获奖时间和参赛角色；同一成果不重复包装。真实版本只保留已获得且可核验的荣誉。</p></aside>
+<div class="cert-section"><div class="cert-section-label">虚构竞赛 · 示例奖状</div><div class="cert-grid">
+<div class="cert-card" onclick="openCert('img','assets/template/award-modeling.svg','星桥建模挑战赛（虚构） · 示例材料')"><div class="cert-badge badge-national">虚构 · 竞赛</div><div class="cert-name" data-edit>星桥建模挑战赛（虚构）</div><div class="cert-sub" data-edit>校级一等奖 · 2025.11 · 示例角色：数据分析</div></div>
+<div class="cert-card" onclick="openCert('img','assets/template/award-design.svg','星桥校园应用设计赛（虚构） · 示例材料')"><div class="cert-badge badge-provincial">虚构 · 竞赛</div><div class="cert-name" data-edit>星桥校园应用设计赛（虚构）</div><div class="cert-sub" data-edit>校级二等奖 · 2025.06 · 示例角色：界面与演示</div></div>
+</div></div><div class="cert-section"><div class="cert-section-label">虚构荣誉 · 示例能力证明</div><div class="cert-grid">
+<div class="cert-card" onclick="openCert('img','assets/template/scholarship.svg','星桥大学成长奖学金（虚构） · 示例材料')"><div class="cert-badge badge-other">虚构 · 荣誉</div><div class="cert-name" data-edit>星桥大学成长奖学金（虚构）</div><div class="cert-sub" data-edit>2024–2025 学年 · 教学占位示例</div></div>
+<div class="cert-card" onclick="openCert('img','assets/template/language-certificate.svg','学术英语能力展示（虚构） · 示例材料')"><div class="cert-badge badge-other">虚构 · 能力证明</div><div class="cert-name" data-edit>学术英语能力展示（虚构）</div><div class="cert-sub" data-edit>2025.04 · 等级与成绩字段示范</div></div>
+</div></div><div class="guide-card">
+<h3 data-edit>证书展示写法</h3>
+<p data-edit>示例：我在〔时间〕参加〔完整竞赛名称〕，担任〔职责〕，完成〔工作〕，获得〔真实奖项〕。点击证书应能查看对应材料。公开前可遮挡身份证件号、证书编号、条码、私人签名和不必要的联系方式。</p>
+</div></div>
+<div class="page" id="page-auto-index">
+<div class="page-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Growing Story · 虚构经历与写作提示</div></div>
+<div class="page-eyebrow" data-edit>Growing Story · 虚构示例</div><h2 class="page-title-cn" data-edit>成长故事 · 写作示例</h2><p class="page-subtitle" data-edit>从童年到大学的 25 个虚构片段，示范“场景—行动—反馈—反思”。</p><div class="divider"></div>
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<div class="prose">
+<p data-edit>成长故事是理解个人方向的补充材料。先让读者在首页和作品页找到你的能力证据，再让他们按兴趣阅读这些片段。真实版本可以缩短早期经历，只保留能解释当前选择的内容。</p>
+</div><div class="chapter-cards">
+<div class="chapter-card" onclick="showChapterIndex('childhood')"><div class="num">01</div><div class="label" data-edit>童年</div><div class="years" data-edit>2005–2011 · 虚构阶段</div></div>
+<div class="chapter-card" onclick="showChapterIndex('primary')"><div class="num">02</div><div class="label" data-edit>小学</div><div class="years" data-edit>2011–2017 · 虚构阶段</div></div>
+<div class="chapter-card" onclick="showChapterIndex('middle')"><div class="num">03</div><div class="label" data-edit>初中</div><div class="years" data-edit>2017–2020 · 虚构阶段</div></div>
+<div class="chapter-card" onclick="showChapterIndex('high')"><div class="num">04</div><div class="label" data-edit>高中</div><div class="years" data-edit>2020–2023 · 虚构阶段</div></div>
+<div class="chapter-card" onclick="showChapterIndex('college')"><div class="num">05</div><div class="label" data-edit>大学</div><div class="years" data-edit>2023–2027 · 虚构阶段</div></div>
+</div>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>每篇只写一个事件，选择具体动作和细节，再说明它如何影响后续行为。无需交代完整家庭史；涉及他人时使用化名，省去与申请或作品无关的隐私。</p></aside>
+</div>
+<div class="page" id="page-childhood-index">
+<div class="page-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Chapter 01 · 童年 · 虚构示例</div></div>
+<button class="back-btn" onclick="showPage('auto-index')">← 返回成长故事</button>
+<div class="page-eyebrow" data-edit>Chapter 01 · 虚构经历</div><h2 class="page-title-cn" data-edit>童年</h2><p class="page-subtitle" data-edit>2005–2011 · 从好奇开始：记录一个具体场景。</p><div class="divider"></div>
+<div class="fragment-list">
+<div class="fragment-item" onclick="showFragment('c1')"><div class="frag-num">01</div><div class="frag-info"><div class="frag-title" data-edit>阳台上的种子</div><div class="frag-preview" data-edit>虚构示例 · 用观察代替笼统的性格描述。</div></div></div>
+<div class="fragment-item" onclick="showFragment('c2')"><div class="frag-num">02</div><div class="frag-info"><div class="frag-title" data-edit>一张不会走丢的地图</div><div class="frag-preview" data-edit>虚构示例 · 第一次把生活问题变成可用的说明。</div></div></div>
+<div class="fragment-item" onclick="showFragment('c3')"><div class="frag-num">03</div><div class="frag-info"><div class="frag-title" data-edit>积木桥的第二次搭建</div><div class="frag-preview" data-edit>虚构示例 · 失败之后，说明你改变了哪一步。</div></div></div>
+<div class="fragment-item" onclick="showFragment('c4')"><div class="frag-num">04</div><div class="frag-info"><div class="frag-title" data-edit>轮到别人讲故事</div><div class="frag-preview" data-edit>虚构示例 · 倾听也是成长的一部分。</div></div></div>
+</div></div>
+<div class="page" id="page-fragment-c1">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>童年 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('childhood')">童年</span><span class="sep">/</span><span data-edit>阳台上的种子</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>童年 · 片段 1 · 虚构示例</div><h2 class="page-title-cn" data-edit>阳台上的种子</h2></div><div class="prose">
+<p data-edit>【虚构示例】我在河湾城的浅水社区长大。五岁那年，家人在阳台给我留了一只旧花盆。我把两粒豆子分别种在有阳光和背阴的位置，每晚用彩笔画下叶子的样子。那时我并不知道什么是实验，只觉得同样的种子也可能有不同的变化。</p>
+<p data-edit>几天后，我发现两盆土的干湿并不相同。原先以为只要比较阳光，后来才意识到自己忘了给它们一样多的水。那张歪歪扭扭的记录纸，让我第一次知道：想回答一个问题，要先看清自己做了什么。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>选一个能看见、能听见的场景；写清你做了什么和发现了什么。童年回忆不必证明天赋，保留当时认识的局限更自然。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showPage('auto-index')"><span class="prev-arrow">←</span><div><div class="prev-label">返回</div><div class="prev-title">成长故事概览</div></div></button>
+<button class="next-btn" onclick="showFragment('c2')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>一张不会走丢的地图</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-c2">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>童年 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('childhood')">童年</span><span class="sep">/</span><span data-edit>一张不会走丢的地图</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>童年 · 片段 2 · 虚构示例</div><h2 class="page-title-cn" data-edit>一张不会走丢的地图</h2></div><div class="prose">
+<p data-edit>【虚构示例】浅水社区新建了阅览室，我总分不清哪条小路通向入口。家人带我走过一遍后，我把凉亭、长椅和门口的大树画在纸上，又用箭头标出拐弯的位置。第二次去时，我试着按自己的图走，终于找到了门。</p>
+<p data-edit>我把地图给邻居看，对方却把一条装饰线当成了道路。我擦掉多余的花边，在真正的路旁写了“往这里走”。后来我愿意先让别人试一试自己的说明，再决定它是不是已经画好了。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>从一个生活中的小问题写起，交代对象、尝试和反馈。不要用“从小热爱设计”替代事实；地图、草稿等物件可以成为叙事线索。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('c1')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>阳台上的种子</div></div></button>
+<button class="next-btn" onclick="showFragment('c3')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>积木桥的第二次搭建</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-c3">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>童年 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('childhood')">童年</span><span class="sep">/</span><span data-edit>积木桥的第二次搭建</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>童年 · 片段 3 · 虚构示例</div><h2 class="page-title-cn" data-edit>积木桥的第二次搭建</h2></div><div class="prose">
+<p data-edit>【虚构示例】幼儿园组织了一次积木搭建，我想造一座能让小车通过的桥。第一座桥跨得很宽，车刚放上去，中间就塌了。我没有再往上堆积木，而是先把两边的支点往中间挪了一格。</p>
+<p data-edit>新桥变短了，却能承受小车。老师问我为什么这样改，我只能比划着说“这里太空了”。许多年后，我仍记得那种把想法拆成一个小改变、再亲手验证的快乐。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>写失败时给出可辨认的原因和调整动作。反思可以来自现在，但应区分“当时怎么想”和“现在怎么看”，避免过度拔高。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('c2')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>一张不会走丢的地图</div></div></button>
+<button class="next-btn" onclick="showFragment('c4')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>轮到别人讲故事</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-c4">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>童年 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('childhood')">童年</span><span class="sep">/</span><span data-edit>轮到别人讲故事</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>童年 · 片段 4 · 虚构示例</div><h2 class="page-title-cn" data-edit>轮到别人讲故事</h2></div><div class="prose">
+<p data-edit>【虚构示例】班级故事会上，我总急着把自己知道的结尾说出来。有一次同伴讲到一半停住了，我以为他忘词，抢着替他说完。活动后，他告诉我，那本来是他改写过的版本。</p>
+<p data-edit>下一次我把想说的话记在一旁，等他讲完再问。故事的结局果然与我熟悉的不同。我慢慢懂得，合作不只是把自己的想法说清楚，也包括给别人留下把想法说完整的时间。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>人际经历用化名或角色称呼，侧重自己的行为变化。省去他人的家庭和隐私信息；一个对话片段通常比“我学会了合作”更有说服力。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('c3')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>积木桥的第二次搭建</div></div></button>
+<button class="next-btn" onclick="showChapterIndex('primary')"><div><div class="next-label">下一章</div><div class="next-title" data-edit>小学</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-primary-index">
+<div class="page-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Chapter 02 · 小学 · 虚构示例</div></div>
+<button class="back-btn" onclick="showPage('auto-index')">← 返回成长故事</button>
+<div class="page-eyebrow" data-edit>Chapter 02 · 虚构经历</div><h2 class="page-title-cn" data-edit>小学</h2><p class="page-subtitle" data-edit>2011–2017 · 从记录到表达：写出习惯如何形成。</p><div class="divider"></div>
+<div class="fragment-list">
+<div class="fragment-item" onclick="showFragment('p1')"><div class="frag-num">01</div><div class="frag-info"><div class="frag-title" data-edit>借书卡背面的清单</div><div class="frag-preview" data-edit>虚构示例 · 把兴趣写成持续发生的行动。</div></div></div>
+<div class="fragment-item" onclick="showFragment('p2')"><div class="frag-num">02</div><div class="frag-info"><div class="frag-title" data-edit>一场没有预测准的雨</div><div class="frag-preview" data-edit>虚构示例 · 让数据和结论有各自的位置。</div></div></div>
+<div class="fragment-item" onclick="showFragment('p3')"><div class="frag-num">03</div><div class="frag-info"><div class="frag-title" data-edit>给校刊画一张流程图</div><div class="frag-preview" data-edit>虚构示例 · 表达从自己明白走向别人能用。</div></div></div>
+<div class="fragment-item" onclick="showFragment('p4')"><div class="frag-num">04</div><div class="frag-info"><div class="frag-title" data-edit>小组任务里的交接纸</div><div class="frag-preview" data-edit>虚构示例 · 写清团队经历中的个人贡献。</div></div></div>
+<div class="fragment-item" onclick="showFragment('p5')"><div class="frag-num">05</div><div class="frag-info"><div class="frag-title" data-edit>离校前的一封说明信</div><div class="frag-preview" data-edit>虚构示例 · 回望阶段，用变化连接下一段。</div></div></div>
+</div></div>
+<div class="page" id="page-fragment-p1">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>小学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('primary')">小学</span><span class="sep">/</span><span data-edit>借书卡背面的清单</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>小学 · 片段 1 · 虚构示例</div><h2 class="page-title-cn" data-edit>借书卡背面的清单</h2></div><div class="prose">
+<p data-edit>【虚构示例】进入河湾城青禾小学后，我每周都去班级图书角借一本书。开始时只记书名，后来在借书卡背面加了两行：最想追问的问题，以及可以讲给同学听的一句话。</p>
+<p data-edit>读到关于天气的章节时，我把“为什么云会移动”写在清单上，找老师借了一本图解书。清单并没有让每个问题都得到答案，却让我学会带着问题读下一本书。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>兴趣要配合频率、方法或产物来写。列出一项反复做过的动作，选择一次具体追问，不要罗列所有读过的书。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showChapterIndex('childhood')"><span class="prev-arrow">←</span><div><div class="prev-label">上一章</div><div class="prev-title" data-edit>童年</div></div></button>
+<button class="next-btn" onclick="showFragment('p2')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>一场没有预测准的雨</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-p2">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>小学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('primary')">小学</span><span class="sep">/</span><span data-edit>一场没有预测准的雨</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>小学 · 片段 2 · 虚构示例</div><h2 class="page-title-cn" data-edit>一场没有预测准的雨</h2></div><div class="prose">
+<p data-edit>【虚构示例】自然课上，我和同学做了一周的天气记录。我依据前几天的云量，猜周五会下雨，结果那天一直晴朗。汇报时，我差点把“预测失败”从表格里擦掉。</p>
+<p data-edit>老师提醒我，记录和猜测不是一回事。我保留了原始表格，在后面另写一栏解释预测。我第一次明白，承认一个判断没有成立，并不会让观察失去价值。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>把事实、判断和感受分开写。错误可以保留，但要说明你之后如何修正方法；不要编造精确成绩来替代成长。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('p1')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>借书卡背面的清单</div></div></button>
+<button class="next-btn" onclick="showFragment('p3')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>给校刊画一张流程图</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-p3">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>小学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('primary')">小学</span><span class="sep">/</span><span data-edit>给校刊画一张流程图</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>小学 · 片段 3 · 虚构示例</div><h2 class="page-title-cn" data-edit>给校刊画一张流程图</h2></div><div class="prose">
+<p data-edit>【虚构示例】校刊征集“如何借阅班级图书”的小文章，我写了满满两页。同学看完仍问：已经有人借走的书该怎么办？我才发现自己遗漏了最常见的情况。</p>
+<p data-edit>我重新画了一个流程图：查目录、登记、等待或借走、归还。编辑把它放在图书角旁边。看到有人照着箭头完成借书，我比看到自己的名字出现在校刊上更开心。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>介绍一项作品时说明服务对象和使用情景，再写修改依据。成果的意义可以是减少一次困惑，不必都写成获奖。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('p2')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>一场没有预测准的雨</div></div></button>
+<button class="next-btn" onclick="showFragment('p4')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>小组任务里的交接纸</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-p4">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>小学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('primary')">小学</span><span class="sep">/</span><span data-edit>小组任务里的交接纸</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>小学 · 片段 4 · 虚构示例</div><h2 class="page-title-cn" data-edit>小组任务里的交接纸</h2></div><div class="prose">
+<p data-edit>【虚构示例】一次科学展示需要三个人完成模型和介绍。我负责模型，却没有告诉同伴哪些部分还没粘好，展示前一天大家重复做了一块底座。我们开始觉得彼此没有认真准备。</p>
+<p data-edit>后来我在桌上放了一张交接纸，写上“已完成”“待确认”和负责人。第二次合作时，大家先看纸再开始做。它很简单，却让我们能把问题讨论在作品上，而不是相互猜测。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>团队故事先交代目标和分工，明确“我负责什么”。写一项协调动作和可观察的变化，避免把整个团队的成果都归到个人。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('p3')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>给校刊画一张流程图</div></div></button>
+<button class="next-btn" onclick="showFragment('p5')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>离校前的一封说明信</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-p5">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>小学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('primary')">小学</span><span class="sep">/</span><span data-edit>离校前的一封说明信</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>小学 · 片段 5 · 虚构示例</div><h2 class="page-title-cn" data-edit>离校前的一封说明信</h2></div><div class="prose">
+<p data-edit>【虚构示例】小学毕业时，我整理图书角的记录，给下一届管理员写了一封说明信。我没有只写“认真负责”，而是列出失联图书如何追查、标签脱落如何补贴、每月哪一天核对清单。</p>
+<p data-edit>整理时，我发现自己从喜欢借书，变成了愿意让借书这件事更顺畅。那封信没有奖状，却是我第一次把一段经历留下成别人可以接着使用的东西。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>阶段结尾写一个具体产物，再回答“与刚开始相比，哪里变了”。用变化连接后续经历，避免“从此彻底改变人生”的夸张转折。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('p4')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>小组任务里的交接纸</div></div></button>
+<button class="next-btn" onclick="showChapterIndex('middle')"><div><div class="next-label">下一章</div><div class="next-title" data-edit>初中</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-middle-index">
+<div class="page-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Chapter 03 · 初中 · 虚构示例</div></div>
+<button class="back-btn" onclick="showPage('auto-index')">← 返回成长故事</button>
+<div class="page-eyebrow" data-edit>Chapter 03 · 虚构经历</div><h2 class="page-title-cn" data-edit>初中</h2><p class="page-subtitle" data-edit>2017–2020 · 从学习到验证：写出思考的过程。</p><div class="divider"></div>
+<div class="fragment-list">
+<div class="fragment-item" onclick="showFragment('m1')"><div class="frag-num">01</div><div class="frag-info"><div class="frag-title" data-edit>错题不再只是红叉</div><div class="frag-preview" data-edit>虚构示例 · 方法改进比单一结果更能展示能力。</div></div></div>
+<div class="fragment-item" onclick="showFragment('m2')"><div class="frag-num">02</div><div class="frag-info"><div class="frag-title" data-edit>第一段会报错的程序</div><div class="frag-preview" data-edit>虚构示例 · 技术兴趣需要一个可复述的起点。</div></div></div>
+<div class="fragment-item" onclick="showFragment('m3')"><div class="frag-num">03</div><div class="frag-info"><div class="frag-title" data-edit>实验桌上的两份记录</div><div class="frag-preview" data-edit>虚构示例 · 证据应当允许别人检查。</div></div></div>
+<div class="fragment-item" onclick="showFragment('m4')"><div class="frag-num">04</div><div class="frag-info"><div class="frag-title" data-edit>把问题问到具体一步</div><div class="frag-preview" data-edit>虚构示例 · 求助可以是一项主动的学习能力。</div></div></div>
+<div class="fragment-item" onclick="showFragment('m5')"><div class="frag-num">05</div><div class="frag-info"><div class="frag-title" data-edit>选课表上的两个问题</div><div class="frag-preview" data-edit>虚构示例 · 把选择写成有依据的取舍。</div></div></div>
+</div></div>
+<div class="page" id="page-fragment-m1">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>初中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('middle')">初中</span><span class="sep">/</span><span data-edit>错题不再只是红叉</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>初中 · 片段 1 · 虚构示例</div><h2 class="page-title-cn" data-edit>错题不再只是红叉</h2></div><div class="prose">
+<p data-edit>【虚构示例】进入青禾中学后，作业内容明显增多。我曾把错题全部抄进笔记本，复习时却还是不知道先看哪一道。后来我给错误加上三个标签：概念不清、步骤遗漏、计算疏忽。</p>
+<p data-edit>每周我只挑一种常见原因重做，并写下检查方法。笔记变薄了，我也能说清自己正在解决哪个问题。学习开始从“花了多少时间”变成“哪一种错误少了”。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>学习故事写“原方法—发现的问题—改法—反馈”。可以说明观察范围；只有掌握真实依据时才使用提升百分比或排名。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showChapterIndex('primary')"><span class="prev-arrow">←</span><div><div class="prev-label">上一章</div><div class="prev-title" data-edit>小学</div></div></button>
+<button class="next-btn" onclick="showFragment('m2')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>第一段会报错的程序</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-m2">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>初中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('middle')">初中</span><span class="sep">/</span><span data-edit>第一段会报错的程序</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>初中 · 片段 2 · 虚构示例</div><h2 class="page-title-cn" data-edit>第一段会报错的程序</h2></div><div class="prose">
+<p data-edit>【虚构示例】信息课上，我尝试写一个计算读书时长的小程序。输入整数时一切正常，输入带小数的时间却出现报错。我一遍遍重跑，直到发现读取和计算使用了不同的数据类型。</p>
+<p data-edit>修好后，我专门输入空白和负数，程序又出了新问题。这次我开始在纸上列出输入情况，再逐项修改。它只是一段练习代码，却让我对“程序能运行”和“程序能被别人使用”的差别有了认识。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>技术起点不必写成传奇。交代具体任务、一个问题和解决步骤；术语只保留能帮助读者理解行动的部分。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('m1')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>错题不再只是红叉</div></div></button>
+<button class="next-btn" onclick="showFragment('m3')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>实验桌上的两份记录</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-m3">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>初中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('middle')">初中</span><span class="sep">/</span><span data-edit>实验桌上的两份记录</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>初中 · 片段 3 · 虚构示例</div><h2 class="page-title-cn" data-edit>实验桌上的两份记录</h2></div><div class="prose">
+<p data-edit>【虚构示例】物理小组做摆动实验时，两位同学得到的计时结果不同。我原本想取一个看起来合理的数字交上去，后来决定把两份记录都留下，并标明各自从哪一刻开始计时。</p>
+<p data-edit>我们统一了起止方式，重新测量几次，再比较差别。报告最后多了一段“误差可能来自哪里”。我发现解释一次不一致，往往比写一个漂亮结论更能让我理解实验。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>写实验时说明比较对象、记录方式和局限。保留一次不一致以及验证过程，让“严谨”通过行动体现。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('m2')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>第一段会报错的程序</div></div></button>
+<button class="next-btn" onclick="showFragment('m4')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>把问题问到具体一步</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-m4">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>初中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('middle')">初中</span><span class="sep">/</span><span data-edit>把问题问到具体一步</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>初中 · 片段 4 · 虚构示例</div><h2 class="page-title-cn" data-edit>把问题问到具体一步</h2></div><div class="prose">
+<p data-edit>【虚构示例】准备一次课堂展示时，我始终说不明白图表中的趋势。第一次问老师，我只说“这道题不会”。老师让我指出已经理解的部分，我才意识到自己把全部疑问混在了一起。</p>
+<p data-edit>第二次我带着标记过的图，问“为什么这里要比较变化量”。讨论很快有了方向。此后，我在求助前先写出已尝试的方法和卡住的位置，也更容易判断得到的回答是否解决了问题。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>可以写求助经历，展示你如何准备问题和消化反馈。避免只写他人帮了你；说明你接着做了哪一步。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('m3')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>实验桌上的两份记录</div></div></button>
+<button class="next-btn" onclick="showFragment('m5')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>选课表上的两个问题</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-m5">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>初中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('middle')">初中</span><span class="sep">/</span><span data-edit>选课表上的两个问题</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>初中 · 片段 5 · 虚构示例</div><h2 class="page-title-cn" data-edit>选课表上的两个问题</h2></div><div class="prose">
+<p data-edit>【虚构示例】初中最后一学期，学校提供科学实践和文学阅读两类拓展课。我都喜欢，却没有时间全部参加。我给自己写了两个问题：哪一类活动能持续投入？哪一类能留下可以反复修改的作品？</p>
+<p data-edit>最终我选择科学实践，同时保留每周的阅读笔记。这个决定没有让我立刻找到职业方向，却让我开始根据实际行动安排兴趣，而不是把每种兴趣都写在同一张愿望清单上。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>写选择时给出当时拥有的信息、考虑的标准和放弃的部分。方向可以逐步形成，不必把所有过去经历都解释为早有计划。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('m4')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>把问题问到具体一步</div></div></button>
+<button class="next-btn" onclick="showChapterIndex('high')"><div><div class="next-label">下一章</div><div class="next-title" data-edit>高中</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-high-index">
+<div class="page-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Chapter 04 · 高中 · 虚构示例</div></div>
+<button class="back-btn" onclick="showPage('auto-index')">← 返回成长故事</button>
+<div class="page-eyebrow" data-edit>Chapter 04 · 虚构经历</div><h2 class="page-title-cn" data-edit>高中</h2><p class="page-subtitle" data-edit>2020–2023 · 从目标到执行：展示调整和取舍。</p><div class="divider"></div>
+<div class="fragment-list">
+<div class="fragment-item" onclick="showFragment('h1')"><div class="frag-num">01</div><div class="frag-info"><div class="frag-title" data-edit>一周计划的空白格</div><div class="frag-preview" data-edit>虚构示例 · 写出计划如何适应现实。</div></div></div>
+<div class="fragment-item" onclick="showFragment('h2')"><div class="frag-num">02</div><div class="frag-info"><div class="frag-title" data-edit>一张图表里的不同声音</div><div class="frag-preview" data-edit>虚构示例 · 沟通需要解释依据，也需要接收反馈。</div></div></div>
+<div class="fragment-item" onclick="showFragment('h3')"><div class="frag-num">03</div><div class="frag-info"><div class="frag-title" data-edit>一次被缩小的社团项目</div><div class="frag-preview" data-edit>虚构示例 · 能完成的范围需要主动设计。</div></div></div>
+<div class="fragment-item" onclick="showFragment('h4')"><div class="frag-num">04</div><div class="frag-info"><div class="frag-title" data-edit>讲解之前先做一遍</div><div class="frag-preview" data-edit>虚构示例 · 准备过程能够体现责任心。</div></div></div>
+<div class="fragment-item" onclick="showFragment('h5')"><div class="frag-num">05</div><div class="frag-info"><div class="frag-title" data-edit>志愿清单里的专业问题</div><div class="frag-preview" data-edit>虚构示例 · 把未来方向连接到已经做过的事情。</div></div></div>
+</div></div>
+<div class="page" id="page-fragment-h1">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>高中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('high')">高中</span><span class="sep">/</span><span data-edit>一周计划的空白格</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>高中 · 片段 1 · 虚构示例</div><h2 class="page-title-cn" data-edit>一周计划的空白格</h2></div><div class="prose">
+<p data-edit>【虚构示例】在河湾实验高中，我给自己排过一张从早到晚的学习表。第一次执行就被一项临时作业打乱。我补不完所有格子，反而不愿再打开计划本。</p>
+<p data-edit>后来我每天只确定两项主要任务，并留出一段空白时间。周末复盘时，我记录未完成的原因，不把它们都归为不够努力。计划开始成为帮助我做选择的工具，而不是给自己打分的表格。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>目标管理用一个可重复的方法来展示。写清调整依据和执行边界，避免堆叠每天的时间表。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showChapterIndex('middle')"><span class="prev-arrow">←</span><div><div class="prev-label">上一章</div><div class="prev-title" data-edit>初中</div></div></button>
+<button class="next-btn" onclick="showFragment('h2')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>一张图表里的不同声音</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-h2">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>高中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('high')">高中</span><span class="sep">/</span><span data-edit>一张图表里的不同声音</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>高中 · 片段 2 · 虚构示例</div><h2 class="page-title-cn" data-edit>一张图表里的不同声音</h2></div><div class="prose">
+<p data-edit>【虚构示例】班级为阅读活动选择时间，我整理了一张问卷图表，认为周末最合适。讨论时，同学指出问卷没有给需要照顾家人的人留出其他选项。我的结论看起来清楚，输入却并不完整。</p>
+<p data-edit>我们补充选择项，再讨论两种可行时段。我在展示时说明了数据收集的范围。那次经历让我愿意先问“这张图漏掉了谁”，再把图表当成决定的依据。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>沟通经历别只写“说服了大家”。补充反馈来自哪里、你如何修改方案，以及最终结论的适用范围。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('h1')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>一周计划的空白格</div></div></button>
+<button class="next-btn" onclick="showFragment('h3')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>一次被缩小的社团项目</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-h3">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>高中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('high')">高中</span><span class="sep">/</span><span data-edit>一次被缩小的社团项目</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>高中 · 片段 3 · 虚构示例</div><h2 class="page-title-cn" data-edit>一次被缩小的社团项目</h2></div><div class="prose">
+<p data-edit>【虚构示例】科技社想做一个完整的校园生活应用，我负责首页和信息整理。列完功能后，我们发现成员的时间和经验都不足以支撑原计划。我建议先只做社团活动日历。</p>
+<p data-edit>我们完成了添加、查看和修改活动三个动作，并让社团成员试用。原先的“大作品”缩成一个小工具，却第一次有了连续使用的反馈。我开始重视能交付的范围，而不仅是想法的数量。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>项目范围缩小也可以成为亮点。说明资源约束、保留的核心需求和交付结果，体现判断能力而非包装规模。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('h2')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>一张图表里的不同声音</div></div></button>
+<button class="next-btn" onclick="showFragment('h4')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>讲解之前先做一遍</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-h4">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>高中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('high')">高中</span><span class="sep">/</span><span data-edit>讲解之前先做一遍</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>高中 · 片段 4 · 虚构示例</div><h2 class="page-title-cn" data-edit>讲解之前先做一遍</h2></div><div class="prose">
+<p data-edit>【虚构示例】我为低年级同学准备一场编程入门分享，最初的幻灯片放了许多概念。试讲时，一位同学在安装环境的步骤就停住了，我才发现自己默认每个人都已经准备好。</p>
+<p data-edit>正式分享前，我用一台空白电脑从头操作，补了检查清单和常见问题。分享中有人提问，我也学会停下来，让他们先把手边的步骤完成。讲解开始以听众能做到什么为标准。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>写分享或教学经历时交代受众、准备方式和反馈。不要仅统计讲了多少场；一次对材料的改动更能展示你的负责方式。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('h3')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>一次被缩小的社团项目</div></div></button>
+<button class="next-btn" onclick="showFragment('h5')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>志愿清单里的专业问题</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-h5">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/campus.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>高中 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('high')">高中</span><span class="sep">/</span><span data-edit>志愿清单里的专业问题</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>高中 · 片段 5 · 虚构示例</div><h2 class="page-title-cn" data-edit>志愿清单里的专业问题</h2></div><div class="prose">
+<p data-edit>【虚构示例】整理升学意向时，我把曾经做过的事情写在一页纸上：记录数据、制作流程图、编写小工具、收集使用反馈。我发现自己更愿意继续研究如何让一个想法成为可检验、可使用的系统。</p>
+<p data-edit>我把计算机科学与技术作为下一阶段的学习方向，并列出需要补上的数学和编程基础。这个决定并不是对未来的保证，而是根据已有体验选择一个值得深入尝试的起点。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>专业选择用经历与课程兴趣连接，说明还需要补足的能力。真实申请中应根据目标调整重点，并保留选择时的不确定性。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('h4')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>讲解之前先做一遍</div></div></button>
+<button class="next-btn" onclick="showChapterIndex('college')"><div><div class="next-label">下一章</div><div class="next-title" data-edit>大学</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-college-index">
+<div class="page-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Chapter 05 · 大学 · 虚构示例</div></div>
+<button class="back-btn" onclick="showPage('auto-index')">← 返回成长故事</button>
+<div class="page-eyebrow" data-edit>Chapter 05 · 虚构经历</div><h2 class="page-title-cn" data-edit>大学</h2><p class="page-subtitle" data-edit>2023–2027 · 从作品到证据：让方向和贡献可被检查。</p><div class="divider"></div>
+<div class="fragment-list">
+<div class="fragment-item" onclick="showFragment('u1')"><div class="frag-num">01</div><div class="frag-info"><div class="frag-title" data-edit>进入星桥大学的第一份清单</div><div class="frag-preview" data-edit>虚构示例 · 把适应写成主动建立的方法。</div></div></div>
+<div class="fragment-item" onclick="showFragment('u2')"><div class="frag-num">02</div><div class="frag-info"><div class="frag-title" data-edit>课程代码变成一份可复现报告</div><div class="frag-preview" data-edit>虚构示例 · 课程成果也能展示扎实的研究习惯。</div></div></div>
+<div class="fragment-item" onclick="showFragment('u3')"><div class="frag-num">03</div><div class="frag-info"><div class="frag-title" data-edit>CampusFlow 的基线先行</div><div class="frag-preview" data-edit>虚构示例 · 科研叙事先说明比较，再说明改进。</div></div></div>
+<div class="fragment-item" onclick="showFragment('u4')"><div class="frag-num">04</div><div class="frag-info"><div class="frag-title" data-edit>StudyLens 的一次失败检索</div><div class="frag-preview" data-edit>虚构示例 · 用错误分析展示对问题的理解。</div></div></div>
+<div class="fragment-item" onclick="showFragment('u5')"><div class="frag-num">05</div><div class="frag-info"><div class="frag-title" data-edit>同一个作品的三种介绍</div><div class="frag-preview" data-edit>虚构示例 · 根据读者关心的问题调整顺序。</div></div></div>
+<div class="fragment-item" onclick="showFragment('u6')"><div class="frag-num">06</div><div class="frag-info"><div class="frag-title" data-edit>把未完成也留在主页上</div><div class="frag-preview" data-edit>虚构示例 · 成长主页可以记录边界和下一步。</div></div></div>
+</div></div>
+<div class="page" id="page-fragment-u1">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>大学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('college')">大学</span><span class="sep">/</span><span data-edit>进入星桥大学的第一份清单</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>大学 · 片段 1 · 虚构示例</div><h2 class="page-title-cn" data-edit>进入星桥大学的第一份清单</h2></div><div class="prose">
+<p data-edit>【虚构示例】2023 年，我进入虚构的星桥大学信息工程学院，学习计算机科学与技术。最初一个月，我列出课程基础、作品练习和阅读三条线，每条线只安排一个能够持续完成的小任务。</p>
+<p data-edit>我用课程笔记连接基础概念，用每周一次的小练习检验理解，并记录读不懂的地方。清单后来几次修改，但它让我能把新环境中的机会与自己的时间放在一起考虑。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>大学开篇交代学校、专业和阶段即可，随后进入行动。真实版本替换全部虚构信息，用一项持续实践展示适应能力。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showChapterIndex('high')"><span class="prev-arrow">←</span><div><div class="prev-label">上一章</div><div class="prev-title" data-edit>高中</div></div></button>
+<button class="next-btn" onclick="showFragment('u2')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>课程代码变成一份可复现报告</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-u2">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>大学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('college')">大学</span><span class="sep">/</span><span data-edit>课程代码变成一份可复现报告</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>大学 · 片段 2 · 虚构示例</div><h2 class="page-title-cn" data-edit>课程代码变成一份可复现报告</h2></div><div class="prose">
+<p data-edit>【虚构示例】完成数据分析课程后，我没有只保存最终图表，还整理了数据来源说明、运行环境、处理步骤和失败的尝试。最难的一步不是继续调参数，而是说明每张图究竟回答了哪个问题。</p>
+<p data-edit>我邀请同学照着说明运行，对方发现一处路径依赖。修改后，报告能够从头重新生成。这件小事让我开始把复现说明视为作品的一部分，后来也沿用了相同的实验记录结构。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>课程项目按“问题—方法—个人贡献—验证—附件”描述。代码能够运行不等于结果可复现；写出你做过的具体检查。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('u1')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>进入星桥大学的第一份清单</div></div></button>
+<button class="next-btn" onclick="showFragment('u3')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>CampusFlow 的基线先行</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-u3">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>大学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('college')">大学</span><span class="sep">/</span><span data-edit>CampusFlow 的基线先行</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>大学 · 片段 3 · 虚构示例</div><h2 class="page-title-cn" data-edit>CampusFlow 的基线先行</h2></div><div class="prose">
+<p data-edit>【虚构示例】在虚构的 CampusFlow 课程研究中，我尝试预测校园服务的模拟需求。第一版模型加入许多特征，却没有与简单方法比较。我先暂停改进，建立按历史均值预测的基线，并固定训练和测试的划分。</p>
+<p data-edit>后续每次修改都记录同一组指标，同时保留没有改善的实验。最终报告重点解释比较是否公平、不同时间段是否有差异。它是教学用的研究示例，没有真实投稿、录用或发表记录。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>科研经历交代任务、对照方法、数据划分和自己的工作。结果注明测试条件；投稿、在审、录用与发表分别使用准确状态。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('u2')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>课程代码变成一份可复现报告</div></div></button>
+<button class="next-btn" onclick="showFragment('u4')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>StudyLens 的一次失败检索</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-u4">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>大学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('college')">大学</span><span class="sep">/</span><span data-edit>StudyLens 的一次失败检索</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>大学 · 片段 4 · 虚构示例</div><h2 class="page-title-cn" data-edit>StudyLens 的一次失败检索</h2></div><div class="prose">
+<p data-edit>【虚构示例】虚构的 StudyLens 项目用于检索模拟学习资料。我负责整理查询案例和排序解释。一次测试中，系统把包含相同关键词的材料排在最前，却没有回答提问者真正关心的概念。</p>
+<p data-edit>我们按问题类型整理失败案例，在解释中加入匹配依据，并重新检查相关性判断。展示里保留了一组仍然容易混淆的查询。这个教学示例帮助我练习把模型输出与用户需求放在一起分析。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>写研究或项目局限时给出具体失败案例和修正方向。不要用“效果显著”替代验证；可公开的截图和报告应与描述一致。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('u3')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>CampusFlow 的基线先行</div></div></button>
+<button class="next-btn" onclick="showFragment('u5')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>同一个作品的三种介绍</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-u5">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>大学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('college')">大学</span><span class="sep">/</span><span data-edit>同一个作品的三种介绍</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>大学 · 片段 5 · 虚构示例</div><h2 class="page-title-cn" data-edit>同一个作品的三种介绍</h2></div><div class="prose">
+<p data-edit>【虚构示例】准备一次模拟升学与求职展示时，我给同一个资料检索作品写了三种介绍。面向研究交流，我先讲问题和实验；面向学习规划，我先讲课程基础；面向工程岗位，我先讲交付的功能和验证过程。</p>
+<p data-edit>作品没有变化，事实也没有变化，只是把证据的顺序调整了。我删掉无法在面谈中解释的词，留下能展开说明的工作，并为每段描述标明对应的报告页或截图。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>保研突出研究问题与贡献；考研突出基础、复试表达与作品；求职突出职责、交付与验证。同一事实可以调整排序，不能随用途改变结果。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('u4')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>StudyLens 的一次失败检索</div></div></button>
+<button class="next-btn" onclick="showFragment('u6')"><div><div class="next-label">下一篇</div><div class="next-title" data-edit>把未完成也留在主页上</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-fragment-u6">
+<div class="page-hero-strip fragment-hero-strip"><img src="assets/template/research.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>大学 · 虚构故事示例</div></div>
+<div class="breadcrumb"><span onclick="showPage('auto-index')">成长故事</span><span class="sep">/</span><span onclick="showChapterIndex('college')">大学</span><span class="sep">/</span><span data-edit>把未完成也留在主页上</span></div>
+<div class="fragment-header"><div class="page-eyebrow" data-edit>大学 · 片段 6 · 虚构示例</div><h2 class="page-title-cn" data-edit>把未完成也留在主页上</h2></div><div class="prose">
+<p data-edit>【虚构示例】回顾本科阶段时，我为主页列出已经完成的作品，也写下一项仍待验证的想法：让资料检索在更少的标注条件下保持稳定。我把它标为“计划”，而不是提前写成成果。</p>
+<p data-edit>在这份虚构模板里，我想呈现的是方向如何形成、工作如何得到检查，以及还需要学习什么。真正使用时，我会用自己的材料逐项替换，让每一句能力描述都能找到对应的经历或作品。</p>
+<aside class="writing-tip"><strong>写作提示</strong><p data-edit>结尾写当前方向、现有证据和下一步行动。未完成事项注明“计划”或“进行中”；主页应随真实进展更新，不必制造完整无缺的履历。</p></aside>
+<div class="nav-next">
+<button class="prev-btn" onclick="showFragment('u5')"><span class="prev-arrow">←</span><div><div class="prev-label">上一篇</div><div class="prev-title" data-edit>同一个作品的三种介绍</div></div></button>
+<button class="next-btn" onclick="showPage('guide')"><div><div class="next-label">开始写自己的版本</div><div class="next-title">使用与写作指南</div></div><span class="next-arrow">→</span></button>
+</div></div></div>
+<div class="page" id="page-guide">
+<div class="page-hero-strip"><img src="assets/template/scenery.svg" alt="个人主页模板 · 虚构场景插画" loading="lazy" decoding="async"><div class="page-hero-strip-overlay"></div><div class="page-hero-strip-label" data-edit>Your Next Draft · 使用与写作指南</div></div>
+<div class="page-eyebrow" data-edit>Template Guide</div><h2 class="page-title-cn" data-edit>使用与写作指南</h2><p class="page-subtitle" data-edit>先确定读者，再整理真实材料，最后替换示例并检查。</p><div class="divider"></div>
+<p class="template-notice">虚构示例 · 所有人物、学校、经历、成果与附件均为模板演示，请替换为自己的真实内容。</p>
+<section class="guide-card"><h3 data-edit>01 · 用一句话确定主页的方向</h3><p data-edit>写法：我正在〔学习 / 研究方向〕，已通过〔代表作品或经历〕积累〔具体能力〕，希望继续〔目标〕。首页保留一句定位、2–3 个代表成果和清楚的联系方式。</p><p data-edit>先制作事实清单：教育背景、课程、研究、项目、荣誉、个人职责、时间和对应材料。优先选择最相关的 3 项成果，不必把所有经历放到首页。</p></section>
+<section class="guide-card"><h3 data-edit>02 · 面向保研：问题、贡献和研究匹配</h3><p data-edit>先写研究兴趣和已有基础，再精选研究、复现或课程报告。每项用“问题是什么—我负责什么—如何验证—还存在哪些限制”四句话组织，附可阅读的报告或代码说明。</p><p data-edit>针对目标研究方向调整成果顺序，解释自己的经历为何能支撑下一步研究。没有论文时展示可靠的实验或课程成果；真实材料的投稿、在审、录用、发表状态要分别写清。</p></section>
+<section class="guide-card"><h3 data-edit>03 · 面向考研：基础、复试表达和可展开的作品</h3><p data-edit>将专业课程、基础技能和一两项代表作品放在前面。每项准备一分钟介绍，并能继续回答实现选择、遇到的问题和自己的职责。初试成绩、排名等信息只有在真实且适合展示时填写。</p><p data-edit>成长故事选择能说明学习方法或专业兴趣的片段，避免挤占作品展示。主页内容需与简历、自我介绍一致；具体招生要求应按目标单位当前公布的信息准备。</p></section>
+<section class="guide-card"><h3 data-edit>04 · 面向求职：角色、交付和验证</h3><p data-edit>根据岗位关注点调整顺序。工程岗位先展示可运行作品、负责模块、技术选择与测试；分析岗位先展示问题定义、处理过程、验证方法和结论如何被使用。</p><p data-edit>每项经历可写为“我负责〔职责〕，为〔对象〕实现〔功能或工作〕，通过〔方法〕检查〔结果〕”。量化结果注明时间、样本与比较范围，团队成果标清个人贡献，保留可公开的截图或材料。</p></section>
+<section class="guide-card"><h3 data-edit>05 · 成长片段：把故事写到行动上</h3><p data-edit>每篇选一个事件，用场景开头，交代困难或疑问，再写自己的动作、收到的反馈和后续变化。先写约 200–400 字，再删去与这一事件无关的背景。</p><p data-edit>可以保留不确定、失败和求助，但要说明接着如何行动。童年到高中不必每章都保留；公开主页优先选能解释当前方向的故事。以上 25 篇均为新创作的虚构写法示范。</p></section>
+<section class="guide-card"><h3 data-edit>06 · 编辑文本与基本资料</h3><p data-edit>点击侧栏底部“编辑示例”，在“资料与链接设置”中替换姓名、学校与专业介绍、联系邮箱和简历 PDF 路径；正文中带编辑框的内容可直接修改。保存用于保留本浏览器中的修改，导出 HTML 用于生成可分享的页面文件。</p><p data-edit>纯文本编辑只修改文字，不会自动更换图片或文件。其他附件可先用同名、同格式的真实材料替换；使用新文件名时，在 HTML 中搜索原示例文件名并更新路径。修改后的链接和按钮都要逐个打开确认。</p></section>
+<section class="guide-card"><h3 data-edit>07 · 替换图片、证书、论文与简历</h3><p data-edit>模板材料位于 assets/template/：resume-sample.pdf 为简历、transcript-sample.pdf 为成绩单、paper-one-sample.pdf 与 paper-two-sample.pdf 为论文样稿，其他 SVG 为证书、项目演示与场景插画。复制整个文件夹后再替换，保留一份原始示例。</p><p data-edit>建议将真实附件另存为短文件名放到 assets/ 内，再更新对应相对路径。证书可使用 PNG、JPG、WebP 或 SVG；论文、成绩单和简历用 PDF。图片路径位于 src，下载路径位于 href，材料预览路径位于 openCert 的参数中；简历路径也可在设置面板修改。使用真实文件格式，不要仅改扩展名。</p></section>
+<section class="guide-card"><h3 data-edit>08 · 分享之前，清理隐私与示例</h3><p data-edit>检查姓名、联系方式、学校、时间、正文、PDF、图片与文件名。删去公开展示不需要的住址、学号、身份证件号、证书编号、条码和其他人的私人信息；公开邮箱可用专门的联系地址。</p><p data-edit>所有虚构学校、论文、奖项、经历与统计字段都应替换或删除。确认内容与证据一致后再调整“虚构示例”标识；保留真实未完成事项的准确状态。查看附件本身，避免只检查网页文字。</p></section>
+<section class="guide-card"><h3 data-edit>09 · 导出、预览与后续维护</h3><p data-edit>点击“保存”后，再“导出 HTML”。将导出的 HTML 与 assets 文件夹一起放在同一目录，再重新打开预览；只分享 HTML 不会自动携带附件。换电脑或换浏览器时，以导出的文件和附件为准。</p><p data-edit>最后检查首页、研究摘要、每个证书、简历预览、下载按钮、成长故事前后导航和手机菜单。每新增一个成果，同步更新简历与主页，核对时间、职责、状态和附件；没有变化的内容无需制造新动态。</p></section>
+<div class="project-actions"><button class="proj-btn" onclick="enterEditMode()">编辑示例</button><button class="proj-btn" onclick="showPage('welcome')">回到首页</button></div></div></main>
+<div id="cert-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="cert-box-title"><div id="cert-backdrop" onclick="closeCert()"></div><div id="cert-box"><div id="cert-box-header"><div id="cert-box-title"></div><button id="cert-close" onclick="closeCert()" aria-label="关闭材料预览">✕</button></div><div id="cert-box-body"></div></div></div>
+<script src="assets/template/template.js"></script>
+</body>
+</html>

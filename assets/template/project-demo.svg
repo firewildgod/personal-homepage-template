@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img"><title>原创虚构示例插图</title><rect width="1200" height="800" fill="#f5f0e5"/><g font-family="Microsoft YaHei, PingFang SC, sans-serif">
+<rect x="52" y="52" width="1096" height="696" rx="12" fill="#fffdf6" stroke="#d0c3aa" stroke-width="3"/>
+<rect x="82" y="82" width="1036" height="66" fill="#a7473d"/>
+<text x="600" y="126" font-size="27" text-anchor="middle" fill="#fffdf6">虚构示例 / SAMPLE · 仅供版式展示</text>
+<text x="96" y="214" font-size="38" fill="#27362f">CampusFlow</text>
+<text x="96" y="252" font-size="20" fill="#647166">校园服务需求看板 · 概念原型</text>
+<g fill="#eee7d7"><rect x="92" y="294" width="302" height="103" rx="8"/><rect x="449" y="294" width="302" height="103" rx="8"/><rect x="805" y="294" width="302" height="103" rx="8"/></g>
+<g font-size="16" fill="#647166"><text x="112" y="325">模拟需求量</text><text x="469" y="325">示例任务数</text><text x="825" y="325">示例变化率</text></g>
+<g font-size="36" fill="#27362f"><text x="112" y="374">128</text><text x="469" y="374">24</text><text x="825" y="374">+12%</text></g>
+<path d="M110 622H724M110 447v175" fill="none" stroke="#c4cbbd" stroke-width="2"/>
+<path d="M111 591 205 555 306 570 406 509 505 530 610 482 717 453" fill="none" stroke="#a7473d" stroke-width="6"/>
+<path d="M111 607 205 583 306 543 406 552 505 504 610 517 717 490" fill="none" stroke="#79936f" stroke-width="5" stroke-dasharray="10 8"/>
+<g fill="#c3cdb7"><rect x="808" y="461" width="48" height="161"/><rect x="877" y="522" width="48" height="100"/><rect x="946" y="489" width="48" height="133"/><rect x="1015" y="433" width="48" height="189"/></g>
+<text x="95" y="692" font-size="19" fill="#647166">数据和指标均为模拟，图形用于展示项目成果的组织方式。</text>
+</g></svg>

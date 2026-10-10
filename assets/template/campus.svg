@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img"><title>原创虚构示例插图</title><rect width="1200" height="800" fill="#f5f0e5"/><g font-family="Microsoft YaHei, PingFang SC, sans-serif">
+<circle cx="972" cy="180" r="58" fill="#cbbba1"/>
+<path d="M0 410 225 340 531 425 829 332 1200 390V800H0Z" fill="#d2d6c9"/>
+<path d="M0 610Q305 523 609 579T1200 581V800H0Z" fill="#a6b59b"/>
+<rect x="319" y="328" width="539" height="247" fill="#e0d3b8"/>
+<path d="M298 328 588 240 879 328Z" fill="#a7473d"/>
+<rect x="481" y="355" width="214" height="220" fill="#ede6d7"/>
+<rect x="532" y="451" width="112" height="124" fill="#576f5d"/>
+<path d="M532 451a56 56 0 0 1 112 0" fill="#576f5d"/>
+<g fill="#74876e"><rect x="350" y="378" width="46" height="58"/><rect x="414" y="378" width="46" height="58"/><rect x="719" y="378" width="46" height="58"/><rect x="782" y="378" width="46" height="58"/><rect x="350" y="472" width="46" height="58"/><rect x="414" y="472" width="46" height="58"/><rect x="719" y="472" width="46" height="58"/><rect x="782" y="472" width="46" height="58"/></g>
+<circle cx="589" cy="375" r="22" fill="#c4b693"/><path d="M589 360v16h12" stroke="#27362f" stroke-width="3" fill="none"/>
+<path d="M539 575 461 800H783L638 575Z" fill="#e0dac7"/>
+<g fill="#607b61"><ellipse cx="163" cy="440" rx="66" ry="98"/><ellipse cx="1007" cy="455" rx="71" ry="112"/></g>
+<g stroke="#47604b" stroke-width="13"><path d="M163 450v181m844-174v184"/></g>
+<rect x="65" y="66" width="66" height="5" fill="#a7473d"/>
+<text x="65" y="107" font-size="18" letter-spacing="4" fill="#27362f">LEARN · BUILD · SHARE</text>
+</g></svg>

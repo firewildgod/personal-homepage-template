@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img"><title>原创虚构示例插图</title><rect width="1200" height="800" fill="#f5f0e5"/><g font-family="Microsoft YaHei, PingFang SC, sans-serif">
+<rect x="127" y="117" width="946" height="544" rx="18" fill="#fffdf6" stroke="#d2c7b1" stroke-width="3"/>
+<rect x="174" y="166" width="852" height="68" rx="4" fill="#27362f"/>
+<circle cx="208" cy="200" r="8" fill="#a7473d"/><circle cx="235" cy="200" r="8" fill="#b6c2aa"/>
+<path d="M195 565H552M213 563V282" stroke="#b4bcae" stroke-width="3" fill="none"/>
+<path d="M222 505 288 453 351 470 418 377 487 398 541 316" stroke="#a7473d" stroke-width="8" fill="none"/>
+<path d="M222 520 288 493 351 425 418 435 487 366 541 352" stroke="#738c70" stroke-width="6" fill="none" stroke-dasharray="11 8"/>
+<g fill="#a7473d"><circle cx="222" cy="505" r="7"/><circle cx="351" cy="470" r="7"/><circle cx="487" cy="398" r="7"/></g>
+<g stroke="#607b61" stroke-width="4" fill="none"><path d="M658 328h187l-64 100 113 101H662l55-102Z"/></g>
+<g fill="#c3ccb8" stroke="#607b61" stroke-width="4"><circle cx="658" cy="328" r="25"/><circle cx="845" cy="328" r="25"/><circle cx="781" cy="428" r="25"/><circle cx="894" cy="529" r="25"/><circle cx="662" cy="529" r="25"/></g>
+<path d="M614 674h-29l-17 38H790l-17-38h-29" fill="#c3c7b8"/>
+<rect x="67" y="712" width="1066" height="15" rx="4" fill="#27362f"/>
+<text x="187" y="627" fill="#647166" font-size="18" letter-spacing="3">QUESTION → METHOD → EVIDENCE</text>
+</g></svg>
